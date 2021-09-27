@@ -7,6 +7,8 @@ number > max ? number = max : number ;
 return number;
 }
 
+console.log(randomNumber(2, 18));
+
 const stringLength = function (stringValue, defaultLength) {
   stringValue = String(stringValue);
 if (stringValue.length <= defaultLength) {
@@ -14,4 +16,6 @@ if (stringValue.length <= defaultLength) {
 }
 return false;
 }
+
+console.log(stringLength('sss', 2));
 
