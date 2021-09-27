@@ -1,21 +1,19 @@
-const randomNumber = function (min, max) {
+const randomNumber = function randomNumber(min, max) {
   if (min < 0 || max < 0 || (max - min) <= 0) {
-    return "Введенные параметры не соответствуют условиям: min, max >= 0; max > min";
+    const textInfo = 'Введенные параметры не соответствуют условиям: min, max >= 0; max > min';
+    return textInfo;
   }
-let number = Math.round(Math.random() * ((max + 1) - min) + min);
-number > max ? number = max : number ;
-return number;
-}
+  const number = Math.floor(Math.random() * ((max + 1) - min) + min);
+  return number;
+};
 
-console.log(randomNumber(2, 18));
+randomNumber(2, 18);
 
-const stringLength = function (stringValue, defaultLength) {
-  stringValue = String(stringValue);
-if (stringValue.length <= defaultLength) {
-  return true;
-}
-return false;
-}
+const stringLength = function stringLength(stringValue, defaultLength) {
+  if (stringValue.length <= defaultLength) {
+    return true;
+  }
+  return false;
+};
 
-console.log(stringLength(546, 4));
-
+stringLength('5455', 4);
