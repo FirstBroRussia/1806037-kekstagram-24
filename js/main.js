@@ -17,5 +17,5 @@ if (stringValue.length <= defaultLength) {
 return false;
 }
 
-console.log(stringLength('sss', 2));
+console.log(stringLength(546, 4));
 
