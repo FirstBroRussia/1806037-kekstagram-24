@@ -1,12 +1,14 @@
-cconst randomNumeric = function randomNumeric(min, max) {
-  const numeric = Math.floor(Math.random() * ((Math.max(min, max) + 1) - Math.min(min, max)) + Math.min(min, max));
+const randomNumeric = function randomNumeric(min, max) {
+  const minNumeric = Math.min(min, max);
+  const maxNumeric = Math.max(min, max);
+  const numeric = Math.floor(Math.random() * ((maxNumeric + 1) - minNumeric) + minNumeric);
   return numeric;
 };
 
-randomNumeric(1, 5);
+randomNumeric(5, 1);
 
-const valueLength = function valueLength(value, defaultLength) {
-  return value.length <= defaultLength;
+const textLength = function textLength(textValue, defaultLength) {
+  return textValue.length <= defaultLength;
 };
 
-valueLength('ssss', 4);
+textLength('ssss', 4);
