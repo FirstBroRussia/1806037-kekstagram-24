@@ -45,34 +45,30 @@ const LIST_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-const arrayNewComment = Array.from({length: 20});
-const arrayNewPhoto = Array.from({length: 25});
+const RANDOM_POSTS_COUNT = 25;
 
-function createArrayNewComments () {
-  for (let counter = 1; counter <= arrayNewComment.length; counter++) {
-    arrayNewComment[counter-1] = {
-      id: counter,
-      avatar: `img/avatar-${randomNumeric(1, 6)}.svg`,
-      message: LIST_COMMENTS[randomNumeric(0, LIST_COMMENTS.length - 1)],
-      name: LIST_NAMES[randomNumeric(0, LIST_NAMES.length - 1)],
-    };
-  }
-  return arrayNewComment;
-}
+const newComments = Array.from({length: RANDOM_POSTS_COUNT});
+const newPhotos = Array.from({length: 25});
 
-createArrayNewComments();
+const createNewComments = newComments.map( (element, index) => {
+  element = {
+    id: index + 1,
+    avatar: `img/avatar-${randomNumeric(1, 6)}.svg`,
+    message: LIST_COMMENTS[randomNumeric(0, LIST_COMMENTS.length - 1)],
+    name: LIST_NAMES[randomNumeric(0, LIST_NAMES.length - 1)],
+  };
+  return element;
+});
 
-function createArrayNewPhotos () {
-  for (let counter = 1; counter <= arrayNewPhoto.length; counter++) {
-    arrayNewPhoto[counter-1] = {
-      id: counter,
-      url: `photos/${counter}.jpg`,
-      description: '',
-      likes: randomNumeric(15, 200),
-      comments: arrayNewComment[randomNumeric(0, arrayNewComment.length - 1)],
-    };
-  }
-  return arrayNewPhoto;
-}
+const createNewPhotos = newPhotos.map( (item, index) => {
+  item = {
+    id: index + 1,
+    url: `photos/${index + 1}.jpg`,
+    description: '',
+    likes: randomNumeric(15, 200),
+    comments: createNewComments[index],
+  };
+  return item;
+});
 
-createArrayNewPhotos();
+createNewPhotos;
