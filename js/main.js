@@ -13,7 +13,7 @@ const textLength = function textLength(textValue, defaultLength) {
 
 textLength('ssss', 4);
 
-const listNames = [
+const LIST_NAMES = [
   'Александр',
   'Михаил',
   'Дмитрий',
@@ -36,7 +36,7 @@ const listNames = [
   'Арина',
 ];
 
-const listComments = [
+const LIST_COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -53,8 +53,8 @@ function createArrayNewComments () {
     arrayNewComment[counter-1] = {
       id: counter,
       avatar: `img/avatar-${randomNumeric(1, 6)}.svg`,
-      message: listComments[randomNumeric(0, listComments.length - 1)],
-      name: listNames[randomNumeric(0, listNames.length - 1)],
+      message: LIST_COMMENTS[randomNumeric(0, LIST_COMMENTS.length - 1)],
+      name: LIST_NAMES[randomNumeric(0, LIST_NAMES.length - 1)],
     };
   }
   return arrayNewComment;
