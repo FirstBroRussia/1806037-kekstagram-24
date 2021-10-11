@@ -45,30 +45,43 @@ const LIST_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
+const DESCRIPTION = [
+  'В Испании!',
+  'Турция',
+  'Сингапур',
+  'Америка',
+  'Геленджик',
+  'Водопады',
+  'В Горах!',
+];
+
 const RANDOM_POSTS_COUNT = 25;
+const DEFAULT_GENERATION_OBJECT = 25;
+const MIN_RANDOM_LIKES = 15;
+const MAX_RANDOM_LIKES = 200;
+const MIN_AVATAR = 1;
+const MAX_AVATAR = 6;
 
 const newComments = Array.from({length: RANDOM_POSTS_COUNT});
-const newPhotos = Array.from({length: 25});
+const newPhotos = Array.from({length: DEFAULT_GENERATION_OBJECT});
 
 const createNewComments = newComments.map( (element, index) => {
-  element = {
+  return {
     id: index + 1,
-    avatar: `img/avatar-${randomNumeric(1, 6)}.svg`,
+    avatar: `img/avatar-${randomNumeric(MIN_AVATAR, MAX_AVATAR)}.svg`,
     message: LIST_COMMENTS[randomNumeric(0, LIST_COMMENTS.length - 1)],
     name: LIST_NAMES[randomNumeric(0, LIST_NAMES.length - 1)],
   };
-  return element;
 });
 
 const createNewPhotos = newPhotos.map( (item, index) => {
-  item = {
+  return {
     id: index + 1,
     url: `photos/${index + 1}.jpg`,
-    description: '',
-    likes: randomNumeric(15, 200),
+    description: DESCRIPTION[randomNumeric(0, DESCRIPTION.length -1)],
+    likes: randomNumeric(MIN_RANDOM_LIKES, MAX_RANDOM_LIKES),
     comments: createNewComments[index],
   };
-  return item;
 });
 
 createNewPhotos;
