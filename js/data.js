@@ -52,25 +52,23 @@ const MAX_AVATAR = 6;
 const newComments = Array.from({length: RANDOM_POSTS_COUNT});
 const newPhotos = Array.from({length: DEFAULT_GENERATION_OBJECT});
 
-const createNewComments = newComments.map( (element, index) => {
-  return {
-    id: index + 1,
-    avatar: `img/avatar-${randomNumeric(MIN_AVATAR, MAX_AVATAR)}.svg`,
-    message: LIST_COMMENTS[randomNumeric(0, LIST_COMMENTS.length - 1)],
-    name: LIST_NAMES[randomNumeric(0, LIST_NAMES.length - 1)],
-  };
-});
+const createNewComments = newComments.map( (element, index) => ({
+  id: index + 1,
+  avatar: `img/avatar-${randomNumeric(MIN_AVATAR, MAX_AVATAR)}.svg`,
+  message: LIST_COMMENTS[randomNumeric(0, LIST_COMMENTS.length - 1)],
+  name: LIST_NAMES[randomNumeric(0, LIST_NAMES.length - 1)],
+}));
 
-const createNewPhotos = newPhotos.map( (item, index) => {
-  return {
-    id: index + 1,
-    url: `photos/${index + 1}.jpg`,
-    description: DESCRIPTION[randomNumeric(0, DESCRIPTION.length -1)],
-    likes: randomNumeric(MIN_RANDOM_LIKES, MAX_RANDOM_LIKES),
-    comments: createNewComments[index],
-  };
-});
+createNewComments;
+
+const createNewPhotos = newPhotos.map( (item, index) => ({
+  id: index + 1,
+  url: `photos/${index + 1}.jpg`,
+  description: DESCRIPTION[randomNumeric(0, DESCRIPTION.length -1)],
+  likes: randomNumeric(MIN_RANDOM_LIKES, MAX_RANDOM_LIKES),
+  comments: createNewComments[index],
+}));
 
 createNewPhotos;
 
-export {createNewPhotos};
+export {createNewPhotos, createNewComments};
