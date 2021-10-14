@@ -1,7 +1,6 @@
-dasdsa
+import {createNewPhotos, createNewComments} from './data.js';
 
-dsadas
+createNewComments;
 
-dasdasda
+createNewPhotos;
 
-dasd
