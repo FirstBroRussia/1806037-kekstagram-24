@@ -1,5 +1,6 @@
-import {createNewPhotos, createNewComments} from './data.js';
-
-createNewComments;
+import {createNewPhotos} from './data.js';
+import {picturesFragment} from './photo-module.js';
 
 createNewPhotos;
+
+picturesFragment;

@@ -71,4 +71,4 @@ const createNewPhotos = newPhotos.map( (item, index) => ({
 
 createNewPhotos;
 
-export {createNewPhotos, createNewComments};
+export {createNewPhotos};
