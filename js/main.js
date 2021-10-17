@@ -1,6 +1,3 @@
-import {createNewPhotos} from './data.js';
-import {picturesFragment} from './photo-module.js';
-
-createNewPhotos;
-
-picturesFragment;
+import './data.js';
+import './photo-module.js';
+import './render-full-picture.js';

@@ -48,9 +48,12 @@ const MIN_RANDOM_LIKES = 15;
 const MAX_RANDOM_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
+const RANDOM_QUANTITY_COMMENTS = 8;
+
 
 const newComments = Array.from({length: RANDOM_POSTS_COUNT});
 const newPhotos = Array.from({length: DEFAULT_GENERATION_OBJECT});
+
 
 const createNewComments = newComments.map( (element, index) => ({
   id: index + 1,
@@ -61,14 +64,32 @@ const createNewComments = newComments.map( (element, index) => ({
 
 createNewComments;
 
+
+const createCommentsList = function () {
+  const commentsList = Array.from({length: randomNumeric(1, RANDOM_QUANTITY_COMMENTS)});
+  const uniqueIndex = [];
+  const createList = commentsList.map((item) => {
+    const currentIndex = randomNumeric(0, createNewComments.length -1);
+    if (!uniqueIndex.includes(currentIndex) || !undefined) {
+      uniqueIndex.push(currentIndex);
+      item = createNewComments[currentIndex];
+      return item;
+    }
+  });
+  return createList;
+};
+
+createCommentsList;
+
 const createNewPhotos = newPhotos.map( (item, index) => ({
   id: index + 1,
   url: `photos/${index + 1}.jpg`,
   description: DESCRIPTION[randomNumeric(0, DESCRIPTION.length -1)],
   likes: randomNumeric(MIN_RANDOM_LIKES, MAX_RANDOM_LIKES),
-  comments: createNewComments[index],
+  comments: createCommentsList(),
 }));
 
+// console.log(createNewPhotos);
 createNewPhotos;
 
 export {createNewPhotos};
