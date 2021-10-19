@@ -12,11 +12,11 @@ const blockSocialComment = document.querySelector('.social__comment');
 
 function renderCommentsList (currentUrl) {
   createNewPhotos.forEach( (item) => {
-    const currentClickPhoto = currentUrl.querySelector('.picture__img').src;
+    const currentClickedPhoto = currentUrl.querySelector('.picture__img').src;
     const currentItemUrl = item.url;
-    if (currentClickPhoto.includes(currentItemUrl)) {
-      const commentsData = item.comments;
-      commentsData.forEach( (itemComments) => {
+    if (currentClickedPhoto.includes(currentItemUrl)) {
+      const comments = item.comments;
+      comments.forEach( (itemComments) => {
         const templateSocialComment = blockSocialComment.cloneNode(true);
         templateSocialComment.querySelector('.social__picture').src = itemComments.avatar;
         templateSocialComment.querySelector('.social__picture').alt = itemComments.name;
