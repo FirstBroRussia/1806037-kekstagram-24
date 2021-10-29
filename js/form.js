@@ -1,17 +1,9 @@
-/* eslint-disable no-constant-condition */
 /* eslint-disable no-use-before-define */
+
 import { isEscapeKey } from './util.js';
 import { bodyList } from './render-full-picture.js';
-import { regExpOverOneSpace, regExpOneHash, regExpOverOneHash, regExpNoSpaceBeforeHash, testArrayToFirstHash, testArrayToMainRegExp, testArrayToASingleCharacterString, testArrayToSameHashTags, deleteEmptyElement } from './functions-to-module-form.js';
+import { regExpList, testArrayToFirstHash, testArrayToMainRegExp, testArrayToASingleCharacterString, testArrayToSameHashTags, deleteEmptyElement } from './functions-to-module-form.js';
 
-// /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/
-
-/* const regExpHashTag = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-const regExpOverOneSpace = /\s\s/;
-const regExpOneHash = /#\s/;
-const regExpOverOneHash = /##/;
-const regExpNoSpaceBeforeHash = /\S#/;
-const regExpFirstSymbol = /^#/; */
 
 const fileUploader = document.querySelector('#upload-file');
 const currentImageUpload = document.createElement('img');
@@ -21,8 +13,10 @@ const buttonCloseUploadWindow = document.querySelector('.img-upload__cancel');
 const buttonSubmitForm = document.querySelector('.img-upload__submit');
 const lengthTextComment = document.querySelector('.text-comment__length');
 const textComment = document.querySelector('.text__description');
-const textHashTags = document.querySelector('.text__hashtags');
+const inputTextHashTags = document.querySelector('.text__hashtags');
 
+const MAX_LENGTH_TEXT_COMMENT_AREA = 140;
+const MAX_QUANTITY_HASH_TAGS = 5;
 
 function closeUploadWindowEscKeydown (evt) {
   if (isEscapeKey(evt)) {
@@ -34,7 +28,7 @@ function closeEditorWindow () {
   bodyList.classList.remove('modal-open');
   editorUploadPhoto.classList.add('hidden');
   fileUploader.value = '';
-  textHashTags.value = '';
+  inputTextHashTags.value = '';
   textComment.textContent = '';
   lengthTextComment.textContent = '0/140';
 
@@ -66,7 +60,7 @@ fileUploader.addEventListener('change', (evt) => {
 
 textComment.addEventListener ('input', () => {
   const textCommentValue = textComment.value;
-  lengthTextComment.textContent = `${textCommentValue.length}/140`;
+  lengthTextComment.textContent = `${textCommentValue.length}/${MAX_LENGTH_TEXT_COMMENT_AREA}`;
 });
 
 textComment.addEventListener('focus', () => {
@@ -80,55 +74,57 @@ textComment.addEventListener('focusout', () => {
 
 // Input поля ХЕШТЕГОВ -----------------------------------------------------
 
-textHashTags.addEventListener('input', () => {
-  const valueTextHashTags = textHashTags.value.toLowerCase();
-  const arrTextHashTags = valueTextHashTags.split(' ');
 
-  deleteEmptyElement(arrTextHashTags);
-
-  if (arrTextHashTags.some(testArrayToFirstHash)) {
-    textHashTags.setCustomValidity('Хеш-тег должен начинаться с символа # (решётка)');
-    textHashTags.reportValidity();
+function validationCheckForInput (itemsTextHashTags, valueTextHashTags, itemsRegExp) {
+  if (itemsTextHashTags.some(testArrayToFirstHash)) {
+    return 'Хеш-тег должен начинаться с символа # (решётка)';
   } else {
-    if (regExpOverOneSpace.test(valueTextHashTags)) {
-      textHashTags.setCustomValidity('Не более одного пробела');
-      textHashTags.reportValidity();
-    } else if (regExpOverOneHash.test(valueTextHashTags) || regExpNoSpaceBeforeHash.test(valueTextHashTags)) {
-      textHashTags.setCustomValidity('Между хеш-тегами обязан быть один пробел');
-      textHashTags.reportValidity();
-    } else if (regExpOneHash.test(valueTextHashTags)) {
-      textHashTags.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
-      textHashTags.reportValidity();
-    } else if (arrTextHashTags.length > 5) {
-      textHashTags.setCustomValidity('Не более пяти хеш-тегов');
-      textHashTags.reportValidity();
+    if (itemsRegExp.regExpOverOneHash.test(valueTextHashTags) || itemsRegExp.regExpNoSpaceBeforeHash.test(valueTextHashTags)) {
+      return 'Между хеш-тегами обязан быть один пробел';
+    } else if (itemsRegExp.regExpOneHash.test(valueTextHashTags)) {
+      return 'Хеш-тег не может состоять только из одной решётки (#)';
+    } else if (itemsTextHashTags.length > MAX_QUANTITY_HASH_TAGS) {
+      return 'Не более пяти хеш-тегов';
     } else {
-      textHashTags.setCustomValidity('');
+      return '';
     }
   }
+}
+
+function validationCheckForSubmit (itemsTextHashTags) {
+  if (itemsTextHashTags.some(testArrayToASingleCharacterString)) {
+    return 'Хеш-тег не может состоять только из одного символа # (решётка)';
+  } else if (testArrayToSameHashTags(itemsTextHashTags)) {
+    return 'Один и тот же хэш-тег не может быть использован дважды';
+  } else if (itemsTextHashTags.some(testArrayToMainRegExp)) {
+    return 'Хеш-тег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.';
+  } else {
+    return '';
+  }
+}
+
+
+inputTextHashTags.addEventListener('input', () => {
+  const valueTextHashTags = inputTextHashTags.value.toLowerCase();
+  const lineTextHashTags = valueTextHashTags.split(' ');
+  const refreshItemsTextHashTags = deleteEmptyElement(lineTextHashTags);
+  inputTextHashTags.setCustomValidity(validationCheckForInput(refreshItemsTextHashTags, valueTextHashTags, regExpList));
+  inputTextHashTags.reportValidity();
 
   buttonSubmitForm.addEventListener('click', () => {
 
-
-    if (arrTextHashTags.some(testArrayToASingleCharacterString)) {
-      textHashTags.setCustomValidity('Хеш-тег не может состоять только из одного символа # (решётка)');
-      textHashTags.reportValidity();
-    } else if (testArrayToSameHashTags(arrTextHashTags)) {
-      textHashTags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
-      textHashTags.reportValidity();
-    } else if (arrTextHashTags.some(testArrayToMainRegExp)) {
-      textHashTags.setCustomValidity('Хеш-тег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
-      textHashTags.reportValidity();
-    } else {
-      textHashTags.setCustomValidity('');
-    }
+    inputTextHashTags.setCustomValidity(validationCheckForSubmit(refreshItemsTextHashTags));
+    inputTextHashTags.reportValidity();
   });
+
 });
 
-textHashTags.addEventListener('focus', () => {
+
+inputTextHashTags.addEventListener('focus', () => {
   document.removeEventListener('keydown', closeUploadWindowEscKeydown);
 });
 
-textHashTags.addEventListener('focusout', () => {
+inputTextHashTags.addEventListener('focusout', () => {
   document.addEventListener('keydown', closeUploadWindowEscKeydown);
 });
+

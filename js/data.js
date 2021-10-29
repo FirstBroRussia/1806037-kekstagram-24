@@ -48,7 +48,7 @@ const MIN_RANDOM_LIKES = 15;
 const MAX_RANDOM_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
-const RANDOM_QUANTITY_COMMENTS = 8;
+const RANDOM_QUANTITY_COMMENTS = 16;
 
 
 const commentsList = Array.from({length: RANDOM_POSTS_COUNT}, (element, index) => ({

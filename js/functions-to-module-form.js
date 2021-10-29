@@ -1,21 +1,20 @@
-const regExpHashTag = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-const regExpFirstSymbol = /^#/;
-const regExpOverOneSpace = /\s\s/;
-const regExpOneHash = /#\s/;
-const regExpOverOneHash = /##/;
-const regExpNoSpaceBeforeHash = /\S#/;
+const regExpList = {
+  regExpHashTag : /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/,
+  regExpFirstSymbol : /^#/,
+  regExpOneHash : /#\s/,
+  regExpOverOneHash : /##/,
+  regExpNoSpaceBeforeHash : /\S#/,
+};
 
 
 function testArrayToFirstHash (item) {
-  if (!regExpFirstSymbol.test(item) && item.length > 0) {
+  if (!regExpList.regExpFirstSymbol.test(item) && item.length > 0) {
     return true;
   }
 }
 
 function testArrayToMainRegExp (item) {
-  if (!regExpHashTag.test(item)) {
-    return true;
-  }
+  return !regExpList.regExpHashTag.test(item);
 }
 
 function testArrayToASingleCharacterString (item) {
@@ -24,26 +23,19 @@ function testArrayToASingleCharacterString (item) {
   }
 }
 
-function testArrayToSameHashTags (array) {
-  for (let index = 0; index < array.length; index++) {
-    const customArray = array.slice(index + 1);
-    if (customArray.some( (item) => item === array[index])) {
+function testArrayToSameHashTags (items) {
+  for (let index = 0; index < items.length; index++) {
+    const customArray = items.slice(index + 1);
+    if (customArray.some( (item) => item === items[index])) {
       return true;
     }
   }
 }
 
-function deleteEmptyElement (array) {
-  // eslint-disable-next-line no-shadow
-  array.forEach( (item, index, array) => {
-    if (item === '') {
-      delete array[index];
-    }
-  });
+function deleteEmptyElement (items) {
+  const refreshItemsTextHashTags = items.filter( (item) => !(item === ''));
+  return refreshItemsTextHashTags;
 }
 
-/* function testArrayToSameHashTags (item, index, array) {
-  array.includes(item);
-} */
 
-export { regExpOverOneSpace, regExpOneHash, regExpOverOneHash, regExpNoSpaceBeforeHash, testArrayToFirstHash, testArrayToMainRegExp, testArrayToASingleCharacterString, testArrayToSameHashTags, deleteEmptyElement};
+export { regExpList, testArrayToFirstHash, testArrayToMainRegExp, testArrayToASingleCharacterString, testArrayToSameHashTags, deleteEmptyElement};
