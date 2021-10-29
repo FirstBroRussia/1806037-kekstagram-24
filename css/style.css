@@ -366,6 +366,10 @@ main {
   outline: auto 5px highlight;
 }
 
+.img-upload__text {
+  position: relative;
+}
+
 
 /* Окно для редактирования изображения
    ========================================================================== */
@@ -695,7 +699,22 @@ main {
   color: #000000;
 
   border-radius: 5px;
+
+  resize: none;
 }
+
+
+/**
+ * Тег для вывода количества введеных символов в окно описания фотография перед загрузкой
+ */
+.text-comment__length {
+  position: absolute;
+  bottom : 10px;
+  right: 80px;
+  color: #dd1313;
+  pointer-events: none;
+}
+
 
 
 /**

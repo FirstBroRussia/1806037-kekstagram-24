@@ -71,27 +71,33 @@ function openBigPicture () {
   closeButtonFullPhotoWindow.addEventListener('click', closeBigPicture);
 }
 
+function allSocialCommentsForClickedPhoto () {
+  const allSocialComments = document.querySelectorAll('.social__comment');
+  return allSocialComments;
+}
+
+function socialCommentCountTextContent (currentsVisibleComments, allSocialComments) {
+  socialCommentCount.textContent = `${currentsVisibleComments} из ${allSocialComments.length} комментариев`;
+}
 
 function renderShowCommentsList () {
-  const allSocialComments = document.querySelectorAll('.social__comment');
-  if (allSocialComments.length > 5) {
+  if (allSocialCommentsForClickedPhoto().length > 5) {
     buttonForUploadingComments.classList.remove('hidden');
     currentVisibleComments = 5;
-    socialCommentCount.textContent = `${currentVisibleComments} из ${allSocialComments.length} комментариев`;
-    allSocialComments.forEach( (item, index) => {
+    socialCommentCountTextContent(currentVisibleComments, allSocialCommentsForClickedPhoto());
+    allSocialCommentsForClickedPhoto().forEach( (item, index) => {
       if (index >= 5) {
         item.classList.add('hidden');
       }
     });
-  } else if (allSocialComments.length <= 5) {
+  } else if (allSocialCommentsForClickedPhoto().length <= 5) {
     buttonForUploadingComments.classList.add('hidden');
-    currentVisibleComments = allSocialComments.length;
-    socialCommentCount.textContent = `${currentVisibleComments} из ${allSocialComments.length} комментариев`;
+    currentVisibleComments = allSocialCommentsForClickedPhoto().length;
+    socialCommentCountTextContent(currentVisibleComments, allSocialCommentsForClickedPhoto());
   }
 }
 
 buttonForUploadingComments.addEventListener('click', () => {
-  const allSocialComments = document.querySelectorAll('.social__comment');
   const specificClassFromListComments = document.querySelectorAll('.social__comment.hidden');
   specificClassFromListComments.forEach( (item, index) => {
     if (index < 5) {
@@ -101,11 +107,11 @@ buttonForUploadingComments.addEventListener('click', () => {
   const refreshListComments = document.querySelectorAll('.social__comment.hidden');
   if (refreshListComments.length === 0) {
     buttonForUploadingComments.classList.add('hidden');
-    currentVisibleComments = allSocialComments.length;
-    socialCommentCount.textContent = `${currentVisibleComments} из ${allSocialComments.length} комментариев`;
+    currentVisibleComments = allSocialCommentsForClickedPhoto().length;
+    socialCommentCountTextContent(currentVisibleComments, allSocialCommentsForClickedPhoto());
   } else {
     currentVisibleComments += 5;
-    socialCommentCount.textContent = `${currentVisibleComments} из ${allSocialComments.length} комментариев`;
+    socialCommentCountTextContent(currentVisibleComments, allSocialCommentsForClickedPhoto());
   }
 });
 
