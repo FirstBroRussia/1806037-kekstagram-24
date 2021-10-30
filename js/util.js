@@ -5,12 +5,14 @@ const randomNumeric = function randomNumeric(min, max) {
   return numeric;
 };
 
-randomNumeric(5, 1);
 
 const textLength = function textLength(textValue, defaultLength) {
   return textValue.length <= defaultLength;
 };
 
-textLength('ssss', 4);
 
-export {randomNumeric, textLength};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+const isEnterKey = (evt) => evt.key === 'Enter';
+
+export {randomNumeric, textLength, isEnterKey, isEscapeKey};
