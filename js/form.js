@@ -20,6 +20,9 @@ const inputTextHashTags = document.querySelector('.text__hashtags');
 
 const MAX_LENGTH_TEXT_COMMENT_AREA = 140;
 const MAX_QUANTITY_HASH_TAGS = 5;
+const MIN_ITEM_SCALE = 25;
+const MAX_ITEM_SCALE = 100;
+const STEP_ITEM_SCALE = 25;
 
 function closeUploadWindowEscKeydown (evt) {
   if (isEscapeKey(evt)) {
@@ -35,7 +38,7 @@ function closeEditorWindow () {
   textComment.textContent = '';
   lengthTextComment.textContent = '0/140';
   placeSliderTag.classList.add('hidden');
-  settingEffect('none');
+  setEffect('none');
 
 
   buttonCloseUploadWindow.removeEventListener('click', closeEditorWindow);
@@ -143,35 +146,34 @@ const previewImgUpload = document.querySelector('.img-upload__preview');
 
 // обработчики на кнопки уменьшения и увеличения масштаба загружаемой фотки
 
+function getStyleTransform () {
+  previewImgUpload.style.transform = `scale(${itemScale/100})`;
+}
+
 function changeTextValueScale () {
   const textValueScale = document.querySelector('.scale__control--value');
   textValueScale.value = `${itemScale}%`;
 }
 
 smallerButton.addEventListener('click', () => {
-  if (itemScale === 25) {
+  if (itemScale === MIN_ITEM_SCALE) {
     smallerButton.disabled = true;
-  } else if (itemScale > 25) {
-    smallerButton.disabled = false;
-    itemScale -= 25;
+  } else if (itemScale > MIN_ITEM_SCALE) {
+    itemScale -= STEP_ITEM_SCALE;
     changeTextValueScale();
-    previewImgUpload.style.transform = `scale(0.${itemScale})`;
+    getStyleTransform();
   }
   smallerButton.disabled = false;
   document.querySelector('.scale__value').textContent = itemScale;
 });
 
 biggerButton.addEventListener('click', () => {
-  if (itemScale === 100) {
+  if (itemScale === MAX_ITEM_SCALE) {
     biggerButton.disabled = true;
-  } else if (itemScale < 100) {
-    biggerButton.disabled = false;
-    itemScale += 25;
+  } else if (itemScale < MAX_ITEM_SCALE) {
+    itemScale += STEP_ITEM_SCALE;
     changeTextValueScale();
-    previewImgUpload.style.transform = `scale(0.${itemScale})`;
-    if (itemScale === 100) {
-      previewImgUpload.style.transform = 'scale(1)';
-    }
+    getStyleTransform();
   }
   biggerButton.disabled = false;
   document.querySelector('.scale__value').textContent = itemScale;
@@ -185,7 +187,7 @@ const placeSliderTag = document.querySelector('.img-upload__effect-level');
 const effectRadio = document.querySelectorAll('.effects__radio');
 
 
-function settingEffect (item) {
+function setEffect (item) {
   previewImgUpload.removeAttribute('class');
   previewImgUpload.setAttribute('class', `img-upload__preview effects__preview--${item}`);
 }
@@ -213,14 +215,11 @@ noUiSlider.create(placeSlider, {
 effectRadio.forEach( (item) => {
   item.addEventListener('click', () => {
     const valueItemEffect = item.value;
-
-
+    setEffect(valueItemEffect);
     if (valueItemEffect === 'none') {
       placeSliderTag.classList.add('hidden');
-      settingEffect(valueItemEffect);
     } else {
       placeSliderTag.classList.remove('hidden');
-      settingEffect(valueItemEffect);
       updateSlider(renderingSliderForCurrentEffect(valueItemEffect));
     }
 
