@@ -514,6 +514,9 @@ main {
   height: 600px;
 
   background-color: #ffffff;
+
+  /* --filter-item: scale (0.6);
+  filter: var(--filter-item); */
 }
 
 .img-upload__preview img {
@@ -699,6 +702,8 @@ main {
 .text__description {
   width: 450px;
   height: 100px;
+
+  resize: none;
 
   margin: 0 auto;
   padding: 15px 10px;
@@ -1415,4 +1420,17 @@ main {
 
 .hidden {
   display: none;
+}
+
+/* Кастомные селекторы -================================ */
+
+.img-upload__text {
+  position: relative;
+}
+
+.text-comment__length {
+  position: absolute;
+  bottom: 10px;
+  right: 80px;
+  color: #e90000;
 }
