@@ -7,23 +7,23 @@ const regExpList = {
 };
 
 
-function testArrayToFirstHash (item) {
+function setTestArrayToFirstHash (item) {
   if (!regExpList.regExpFirstSymbol.test(item) && item.length > 0) {
     return true;
   }
 }
 
-function testArrayToMainRegExp (item) {
+function setTestArrayToMainRegExp (item) {
   return !regExpList.regExpHashTag.test(item);
 }
 
-function testArrayToASingleCharacterString (item) {
+function setTestArrayToASingleCharacterString (item) {
   if (item === '#') {
     return true;
   }
 }
 
-function testArrayToSameHashTags (items) {
+function setTestArrayToSameHashTags (items) {
   for (let index = 0; index < items.length; index++) {
     const customArray = items.slice(index + 1);
     if (customArray.some( (item) => item === items[index])) {
@@ -32,10 +32,10 @@ function testArrayToSameHashTags (items) {
   }
 }
 
-function deleteEmptyElement (items) {
+function setDeleteEmptyElement (items) {
   const refreshItemsTextHashTags = items.filter( (item) => !(item === ''));
   return refreshItemsTextHashTags;
 }
 
 
-export { regExpList, testArrayToFirstHash, testArrayToMainRegExp, testArrayToASingleCharacterString, testArrayToSameHashTags, deleteEmptyElement};
+export { regExpList, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement};

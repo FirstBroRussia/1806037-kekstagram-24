@@ -2,17 +2,19 @@
 
 import { isEscapeKey } from './util.js';
 import { bodyList } from './render-full-picture.js';
-import { regExpList, testArrayToFirstHash, testArrayToMainRegExp, testArrayToASingleCharacterString, testArrayToSameHashTags, deleteEmptyElement } from './functions-to-module-form.js';
+import { regExpList, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement } from './functions-to-module-form.js';
+import { setDataToServer } from './api.js';
 import '/nouislider/nouislider.js';
 
 let itemScale = 100;
 
+const form = document.querySelector('.img-upload__form');
 const fileUploader = document.querySelector('#upload-file');
 const currentImageUpload = document.createElement('img');
 const imagePreview = document.querySelector('.img-upload__preview').querySelector('img');
 const editorUploadPhoto = document.querySelector('.img-upload__overlay');
 const buttonCloseUploadWindow = document.querySelector('.img-upload__cancel');
-const buttonSubmitForm = document.querySelector('.img-upload__submit');
+// const buttonSubmitForm = document.querySelector('.img-upload__submit');
 const lengthTextComment = document.querySelector('.text-comment__length');
 const textComment = document.querySelector('.text__description');
 const inputTextHashTags = document.querySelector('.text__hashtags');
@@ -24,13 +26,13 @@ const MIN_ITEM_SCALE = 25;
 const MAX_ITEM_SCALE = 100;
 const STEP_ITEM_SCALE = 25;
 
-function closeUploadWindowEscKeydown (evt) {
+function setCloseUploadWindowEscKeydown (evt) {
   if (isEscapeKey(evt)) {
-    closeEditorWindow();
+    setCloseEditorWindow();
   }
 }
 
-function closeEditorWindow () {
+function setCloseEditorWindow () {
   bodyList.classList.remove('modal-open');
   editorUploadPhoto.classList.add('hidden');
   fileUploader.value = '';
@@ -41,19 +43,19 @@ function closeEditorWindow () {
   setEffect('none');
 
 
-  buttonCloseUploadWindow.removeEventListener('click', closeEditorWindow);
-  document.removeEventListener('keydown', closeUploadWindowEscKeydown);
+  buttonCloseUploadWindow.removeEventListener('click', setCloseEditorWindow);
+  document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
 }
 
-function openEditorWindow () {
+function setOpenEditorWindow () {
   bodyList.classList.add('modal-open');
   editorUploadPhoto.classList.remove('hidden');
-  buttonCloseUploadWindow.addEventListener('click', closeEditorWindow);
-  document.addEventListener('keydown', closeUploadWindowEscKeydown);
+  buttonCloseUploadWindow.addEventListener('click', setCloseEditorWindow);
+  document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
 }
 
 
-function getImageUploaded (evt) {
+function setImageUploaded (evt) {
   const files = evt.target.files;
   currentImageUpload.src = URL.createObjectURL(files[0]);
   currentImageUpload.alt = files[0].name;
@@ -61,9 +63,9 @@ function getImageUploaded (evt) {
 
 
 fileUploader.addEventListener('change', (evt) => {
-  getImageUploaded(evt);
+  setImageUploaded(evt);
   imagePreview.src = currentImageUpload.src;
-  openEditorWindow();
+  setOpenEditorWindow();
 });
 
 
@@ -73,19 +75,19 @@ textComment.addEventListener ('input', () => {
 });
 
 textComment.addEventListener('focus', () => {
-  document.removeEventListener('keydown', closeUploadWindowEscKeydown);
+  document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
 textComment.addEventListener('focusout', () => {
-  document.addEventListener('keydown', closeUploadWindowEscKeydown);
+  document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
 
 // Input поля ХЕШТЕГОВ -----------------------------------------------------
 
 
-function validationCheckForInput (itemsTextHashTags, valueTextHashTags, itemsRegExp) {
-  if (itemsTextHashTags.some(testArrayToFirstHash)) {
+function setValidationCheckForInput (itemsTextHashTags, valueTextHashTags, itemsRegExp) {
+  if (itemsTextHashTags.some(setTestArrayToFirstHash)) {
     return 'Хеш-тег должен начинаться с символа # (решётка)';
   } else {
     if (itemsRegExp.regExpOverOneHash.test(valueTextHashTags) || itemsRegExp.regExpNoSpaceBeforeHash.test(valueTextHashTags)) {
@@ -100,57 +102,67 @@ function validationCheckForInput (itemsTextHashTags, valueTextHashTags, itemsReg
   }
 }
 
-function validationCheckForSubmit (itemsTextHashTags) {
-  if (itemsTextHashTags.some(testArrayToASingleCharacterString)) {
+function setValidationCheckForSubmit (itemsTextHashTags) {
+  if (itemsTextHashTags.some(setTestArrayToASingleCharacterString)) {
     return 'Хеш-тег не может состоять только из одного символа # (решётка)';
-  } else if (testArrayToSameHashTags(itemsTextHashTags)) {
+  } else if (setTestArrayToSameHashTags(itemsTextHashTags)) {
     return 'Один и тот же хэш-тег не может быть использован дважды';
-  } else if (itemsTextHashTags.some(testArrayToMainRegExp)) {
+  } else if (itemsTextHashTags.some(setTestArrayToMainRegExp)) {
     return 'Хеш-тег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.';
   } else {
     return '';
   }
 }
 
-
-inputTextHashTags.addEventListener('input', () => {
+function setUniqueOperationsOverInputValueHashTags () {
   const valueTextHashTags = inputTextHashTags.value.toLowerCase();
   const lineTextHashTags = valueTextHashTags.split(' ');
-  const refreshItemsTextHashTags = deleteEmptyElement(lineTextHashTags);
-  inputTextHashTags.setCustomValidity(validationCheckForInput(refreshItemsTextHashTags, valueTextHashTags, regExpList));
-  inputTextHashTags.reportValidity();
+  const refreshItemsTextHashTags = setDeleteEmptyElement(lineTextHashTags);
+  return [refreshItemsTextHashTags, valueTextHashTags];
+}
 
-  buttonSubmitForm.addEventListener('click', () => {
-
-    inputTextHashTags.setCustomValidity(validationCheckForSubmit(refreshItemsTextHashTags));
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const returnValue = setUniqueOperationsOverInputValueHashTags();
+  inputTextHashTags.setCustomValidity(setValidationCheckForSubmit(returnValue[0]));
+  if (!inputTextHashTags.validity.valid) {
+    inputTextHashTags.classList.add('border-hash-tags');
     inputTextHashTags.reportValidity();
+  } else {
+    inputTextHashTags.classList.remove('border-hash-tags');
+    setDataToServer();
+  }
+});
 
-  });
-
+inputTextHashTags.addEventListener('input', () => {
+  const returnValue = setUniqueOperationsOverInputValueHashTags();
+  inputTextHashTags.setCustomValidity(setValidationCheckForInput(returnValue[0], returnValue[1], regExpList));
+  inputTextHashTags.reportValidity();
 });
 
 
 inputTextHashTags.addEventListener('focus', () => {
-  document.removeEventListener('keydown', closeUploadWindowEscKeydown);
+  document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
 inputTextHashTags.addEventListener('focusout', () => {
-  document.addEventListener('keydown', closeUploadWindowEscKeydown);
+  document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
-// !!!! Применение фильтров и изменение масштаба ------------------------------------------------------------
+// !!!! Применение эффектов и изменение масштаба ------------------------------------------------------------
 
 const smallerButton = document.querySelector('.scale__control--smaller');
 const biggerButton = document.querySelector('.scale__control--bigger');
 const previewImgUpload = document.querySelector('.img-upload__preview');
 
+
 // обработчики на кнопки уменьшения и увеличения масштаба загружаемой фотки
 
-function getStyleTransform () {
+function setStyleTransform () {
   previewImgUpload.style.transform = `scale(${itemScale/100})`;
 }
 
-function changeTextValueScale () {
+function setChangeTextValueScale () {
   const textValueScale = document.querySelector('.scale__control--value');
   textValueScale.value = `${itemScale}%`;
 }
@@ -160,8 +172,8 @@ smallerButton.addEventListener('click', () => {
     smallerButton.disabled = true;
   } else if (itemScale > MIN_ITEM_SCALE) {
     itemScale -= STEP_ITEM_SCALE;
-    changeTextValueScale();
-    getStyleTransform();
+    setChangeTextValueScale();
+    setStyleTransform();
   }
   smallerButton.disabled = false;
   document.querySelector('.scale__value').textContent = itemScale;
@@ -172,8 +184,8 @@ biggerButton.addEventListener('click', () => {
     biggerButton.disabled = true;
   } else if (itemScale < MAX_ITEM_SCALE) {
     itemScale += STEP_ITEM_SCALE;
-    changeTextValueScale();
-    getStyleTransform();
+    setChangeTextValueScale();
+    setStyleTransform();
   }
   biggerButton.disabled = false;
   document.querySelector('.scale__value').textContent = itemScale;
@@ -185,14 +197,14 @@ biggerButton.addEventListener('click', () => {
 const placeSlider = document.querySelector('.effect-level__slider');
 const placeSliderTag = document.querySelector('.img-upload__effect-level');
 const effectRadio = document.querySelectorAll('.effects__radio');
-
+const inputValueDepthEffect = document.querySelector('.effect-level__value');
 
 function setEffect (item) {
   previewImgUpload.removeAttribute('class');
   previewImgUpload.setAttribute('class', `img-upload__preview effects__preview--${item}`);
 }
 
-function updateSlider (currentItemEffect) {
+function setUpdateSlider (currentItemEffect) {
   placeSlider.noUiSlider.updateOptions(currentItemEffect);
 }
 
@@ -218,14 +230,18 @@ effectRadio.forEach( (item) => {
     setEffect(valueItemEffect);
     if (valueItemEffect === 'none') {
       placeSliderTag.classList.add('hidden');
+      inputValueDepthEffect.setAttribute('step', '');
+      inputValueDepthEffect.setAttribute('value', '');
     } else {
       placeSliderTag.classList.remove('hidden');
-      updateSlider(renderingSliderForCurrentEffect(valueItemEffect));
+      setUpdateSlider(setRenderSliderForCurrentEffect(valueItemEffect));
+      setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueItemEffect));
     }
 
     placeSlider.noUiSlider.on('update', (__, ___, currentItemSlider) => {
-      previewImgUpload.style.filter = changingValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0]);
-      document.querySelector('.effect__value').textContent = `filter: ${changingValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0])}`;
+      inputValueDepthEffect.setAttribute('value', `${currentItemSlider}`);
+      previewImgUpload.style.filter = setChangeValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0]);
+      document.querySelector('.effect__value').textContent = `filter: ${setChangeValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0])}`;
     });
 
   });
@@ -233,8 +249,11 @@ effectRadio.forEach( (item) => {
 
 // --------------------------------------------------
 
+function setChangeValueDepthEffect (currentEffect) {
+  inputValueDepthEffect.setAttribute('step', `${currentEffect.step}`);
+}
 
-function renderingSliderForCurrentEffect (currentEffect) {
+function setRenderSliderForCurrentEffect (currentEffect) {
   switch (currentEffect) {
     case 'chrome':
       return {
@@ -287,7 +306,7 @@ function renderingSliderForCurrentEffect (currentEffect) {
 }
 
 
-function changingValuesFilterToImgUploadPreview (currentEffect, currentItemSlider) {
+function setChangeValuesFilterToImgUploadPreview (currentEffect, currentItemSlider) {
   switch (currentEffect) {
     case 'chrome':
       return `grayscale(${currentItemSlider})`;
@@ -304,3 +323,4 @@ function changingValuesFilterToImgUploadPreview (currentEffect, currentItemSlide
   }
 }
 
+export {editorUploadPhoto};
