@@ -29,7 +29,7 @@ containerPhotoList.addEventListener('keydown', setSelectElement);
 function setClickToPhotoMiniatures (evt) {
   const currentPhoto = evt.target.closest('a[class="picture"]');
   if (currentPhoto) {
-    setRenderBigPicture(currentPhoto, currentDataList);
+    setRenderBigPicture(currentPhoto);
     setRenderCommentsList(currentPhoto, currentDataList);
     setRenderShowCommentsList();
     setOpenBigPicture();
