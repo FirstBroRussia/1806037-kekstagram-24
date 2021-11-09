@@ -5,14 +5,10 @@ const randomNumeric = function randomNumeric(min, max) {
   return numeric;
 };
 
-
-const textLength = function textLength(textValue, defaultLength) {
-  return textValue.length <= defaultLength;
-};
-
+const VALID_FILE_EXTENSIONS = ['png', 'jpeg', 'jpg'];
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const isEnterKey = (evt) => evt.key === 'Enter';
 
-export {randomNumeric, textLength, isEnterKey, isEscapeKey};
+export {randomNumeric, isEnterKey, isEscapeKey, VALID_FILE_EXTENSIONS};

@@ -1,24 +1,31 @@
 /* eslint-disable no-use-before-define */
 
-import { isEscapeKey } from './util.js';
+import { isEscapeKey, VALID_FILE_EXTENSIONS } from './util.js';
 import { bodyList } from './render-full-picture.js';
 import { regExpList, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement } from './functions-to-module-form.js';
-import { setDataToServer } from './api.js';
+import { setDataToServer, setSuccessToUploadPhotos, setErrorToUploadPhotos } from './api.js';
 import '/nouislider/nouislider.js';
 
 let itemScale = 100;
 
 const form = document.querySelector('.img-upload__form');
-const fileUploader = document.querySelector('#upload-file');
-const currentImageUpload = document.createElement('img');
-const imagePreview = document.querySelector('.img-upload__preview').querySelector('img');
+const fileUploaderButton = document.querySelector('#upload-file');
+const currentImageUpload = document.querySelector('.img-upload__preview').querySelector('img');
 const editorUploadPhoto = document.querySelector('.img-upload__overlay');
 const buttonCloseUploadWindow = document.querySelector('.img-upload__cancel');
-// const buttonSubmitForm = document.querySelector('.img-upload__submit');
 const lengthTextComment = document.querySelector('.text-comment__length');
 const textComment = document.querySelector('.text__description');
 const inputTextHashTags = document.querySelector('.text__hashtags');
-
+const messageToLoading = document.querySelector('#messages').content.querySelector('.img-upload__message');
+const textValueScale = document.querySelector('.scale__control--value');
+const effectNoneButton = document.querySelector('#effect-none');
+const smallerScaleButton = document.querySelector('.scale__control--smaller');
+const biggerScaleButton = document.querySelector('.scale__control--bigger');
+const previewImgUpload = document.querySelector('.img-upload__preview');
+const placeSlider = document.querySelector('.effect-level__slider');
+const placeSliderTag = document.querySelector('.img-upload__effect-level');
+const effectsRadioList = document.querySelectorAll('.effects__radio');
+const inputValueDepthEffect = document.querySelector('.effect-level__value');
 
 const MAX_LENGTH_TEXT_COMMENT_AREA = 140;
 const MAX_QUANTITY_HASH_TAGS = 5;
@@ -26,53 +33,122 @@ const MIN_ITEM_SCALE = 25;
 const MAX_ITEM_SCALE = 100;
 const STEP_ITEM_SCALE = 25;
 
+// Моменты по контролу загрузки фото
+
+function setChangeUploadFile (evt) {
+  const files = evt.target.files;
+  if (VALID_FILE_EXTENSIONS.some( (item) => files[0].name.includes(item))) {
+    currentImageUpload.src = URL.createObjectURL(files[0]);
+    setOpenEditorWindow();
+  } else {
+    fileUploaderButton.setCustomValidity('Неподдерживаемый формат файла\nТолько: .jpeg, .jpg, .png');
+    fileUploaderButton.reportValidity();
+    fileUploaderButton.value = '';
+  }
+}
+
+fileUploaderButton.addEventListener('change', setChangeUploadFile);
+
+// -------------------------------------------------------------------
+noUiSlider.create(placeSlider, {
+  range: {
+    min: 0,
+    max: 100,
+  },
+  start: 80,
+  step: 1,
+  connect: 'lower',
+});
+
+function setEffect (item) {
+  previewImgUpload.removeAttribute('class');
+  previewImgUpload.setAttribute('class', `img-upload__preview effects__preview--${item}`);
+}
+
+function setUpdateSlider (currentItemEffect) {
+  placeSlider.noUiSlider.updateOptions(currentItemEffect);
+}
+
+//-------------------------------------------------------------
+
 function setCloseUploadWindowEscKeydown (evt) {
   if (isEscapeKey(evt)) {
     setCloseEditorWindow();
   }
 }
 
-function setCloseEditorWindow () {
-  bodyList.classList.remove('modal-open');
-  editorUploadPhoto.classList.add('hidden');
-  fileUploader.value = '';
-  inputTextHashTags.value = '';
-  textComment.textContent = '';
-  lengthTextComment.textContent = '0/140';
-  placeSliderTag.classList.add('hidden');
-  setEffect('none');
-
-
-  buttonCloseUploadWindow.removeEventListener('click', setCloseEditorWindow);
-  document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+function setChangeInputFieldToTextComment () {
+  const textCommentValue = textComment.value;
+  lengthTextComment.textContent = `${textCommentValue.length}/${MAX_LENGTH_TEXT_COMMENT_AREA}`;
 }
 
 function setOpenEditorWindow () {
+  fileUploaderButton.disabled = true;
   bodyList.classList.add('modal-open');
   editorUploadPhoto.classList.remove('hidden');
+
+  effectsRadioList.forEach( (item) => {
+    item.addEventListener('click', () => {
+      const valueItemEffect = item.value;
+      setEffect(valueItemEffect);
+
+      function setChangeSliderPosition (__, ___, currentItemSlider) {
+        const fixedCurrentItem = +currentItemSlider[0].toFixed(1);
+        inputValueDepthEffect.setAttribute('value', `${fixedCurrentItem}`);
+        previewImgUpload.style.filter = setChangeValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0]);
+      }
+      if (valueItemEffect === 'none') {
+        placeSliderTag.classList.add('hidden');
+        inputValueDepthEffect.setAttribute('step', '');
+        inputValueDepthEffect.setAttribute('value', '');
+      } else {
+        placeSliderTag.classList.remove('hidden');
+        setUpdateSlider(setRenderSliderForCurrentEffect(valueItemEffect));
+        setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueItemEffect));
+      }
+      placeSlider.noUiSlider.on('update', setChangeSliderPosition);
+    });
+  });
+
+  fileUploaderButton.removeEventListener('change', setChangeUploadFile);
   buttonCloseUploadWindow.addEventListener('click', setCloseEditorWindow);
   document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
+  textComment.addEventListener ('input', setChangeInputFieldToTextComment);
+  inputTextHashTags.addEventListener('input', setChangeInputFieldHashTags);
+  smallerScaleButton.addEventListener('click', setClickToSmallerScaleButton);
+  biggerScaleButton.addEventListener('click', setClickToBiggerScaleButton);
+  form.addEventListener('submit', setSubmitToFormField);
 }
 
+function setCloseEditorWindow () {
+  fileUploaderButton.disabled = false;
+  bodyList.classList.remove('modal-open');
+  editorUploadPhoto.classList.add('hidden');
+  fileUploaderButton.value = '';
+  inputTextHashTags.value = '';
+  textComment.value = '';
+  lengthTextComment.textContent = '0/140';
+  placeSliderTag.classList.add('hidden');
+  currentImageUpload.src = '';
+  currentImageUpload.alt = '';
+  previewImgUpload.style.transform = 'scale(1)';
+  textValueScale.value = '100%';
+  effectNoneButton.click();
+  setEffect('none');
 
-function setImageUploaded (evt) {
-  const files = evt.target.files;
-  currentImageUpload.src = URL.createObjectURL(files[0]);
-  currentImageUpload.alt = files[0].name;
+  fileUploaderButton.addEventListener('change', setChangeUploadFile);
+  buttonCloseUploadWindow.removeEventListener('click', setCloseEditorWindow);
+  document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+  textComment.removeEventListener ('input', setChangeInputFieldToTextComment);
+  inputTextHashTags.removeEventListener('input', setChangeInputFieldHashTags);
+  smallerScaleButton.removeEventListener('click', setClickToSmallerScaleButton);
+  biggerScaleButton.removeEventListener('click', setClickToBiggerScaleButton);
+  placeSlider.noUiSlider.off('update');
+  form.removeEventListener('submit', setSubmitToFormField);
 }
 
+// Моменты по вводу в поле комментария и хештега при загрузке фото
 
-fileUploader.addEventListener('change', (evt) => {
-  setImageUploaded(evt);
-  imagePreview.src = currentImageUpload.src;
-  setOpenEditorWindow();
-});
-
-
-textComment.addEventListener ('input', () => {
-  const textCommentValue = textComment.value;
-  lengthTextComment.textContent = `${textCommentValue.length}/${MAX_LENGTH_TEXT_COMMENT_AREA}`;
-});
 
 textComment.addEventListener('focus', () => {
   document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
@@ -82,8 +158,15 @@ textComment.addEventListener('focusout', () => {
   document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
+inputTextHashTags.addEventListener('focus', () => {
+  document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+});
 
-// Input поля ХЕШТЕГОВ -----------------------------------------------------
+inputTextHashTags.addEventListener('focusout', () => {
+  document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
+});
+
+// Моменты по валидации поля ввода Хештегов
 
 
 function setValidationCheckForInput (itemsTextHashTags, valueTextHashTags, itemsRegExp) {
@@ -121,7 +204,12 @@ function setUniqueOperationsOverInputValueHashTags () {
   return [refreshItemsTextHashTags, valueTextHashTags];
 }
 
-form.addEventListener('submit', (evt) => {
+function setPopupMessageToLoading () {
+  editorUploadPhoto.classList.add('hidden');
+  bodyList.appendChild(messageToLoading);
+}
+
+function setSubmitToFormField (evt) {
   evt.preventDefault();
   const returnValue = setUniqueOperationsOverInputValueHashTags();
   inputTextHashTags.setCustomValidity(setValidationCheckForSubmit(returnValue[0]));
@@ -130,124 +218,51 @@ form.addEventListener('submit', (evt) => {
     inputTextHashTags.reportValidity();
   } else {
     inputTextHashTags.classList.remove('border-hash-tags');
-    setDataToServer();
+    fileUploaderButton.disabled = false;
+    setPopupMessageToLoading();
+    setDataToServer(setSuccessToUploadPhotos, setErrorToUploadPhotos);
   }
-});
+}
 
-inputTextHashTags.addEventListener('input', () => {
+function setChangeInputFieldHashTags () {
   const returnValue = setUniqueOperationsOverInputValueHashTags();
   inputTextHashTags.setCustomValidity(setValidationCheckForInput(returnValue[0], returnValue[1], regExpList));
   inputTextHashTags.reportValidity();
-});
+}
 
-
-inputTextHashTags.addEventListener('focus', () => {
-  document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
-});
-
-inputTextHashTags.addEventListener('focusout', () => {
-  document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
-});
-
-// !!!! Применение эффектов и изменение масштаба ------------------------------------------------------------
-
-const smallerButton = document.querySelector('.scale__control--smaller');
-const biggerButton = document.querySelector('.scale__control--bigger');
-const previewImgUpload = document.querySelector('.img-upload__preview');
-
-
-// обработчики на кнопки уменьшения и увеличения масштаба загружаемой фотки
 
 function setStyleTransform () {
   previewImgUpload.style.transform = `scale(${itemScale/100})`;
 }
 
 function setChangeTextValueScale () {
-  const textValueScale = document.querySelector('.scale__control--value');
   textValueScale.value = `${itemScale}%`;
 }
 
-smallerButton.addEventListener('click', () => {
+function setClickToSmallerScaleButton () {
   if (itemScale === MIN_ITEM_SCALE) {
-    smallerButton.disabled = true;
+    smallerScaleButton.disabled = true;
   } else if (itemScale > MIN_ITEM_SCALE) {
     itemScale -= STEP_ITEM_SCALE;
     setChangeTextValueScale();
     setStyleTransform();
   }
-  smallerButton.disabled = false;
-  document.querySelector('.scale__value').textContent = itemScale;
-});
+  smallerScaleButton.disabled = false;
+  document.querySelector('.scale__control--value').setAttribute('value', `${itemScale}%`);
+}
 
-biggerButton.addEventListener('click', () => {
+function setClickToBiggerScaleButton () {
   if (itemScale === MAX_ITEM_SCALE) {
-    biggerButton.disabled = true;
+    biggerScaleButton.disabled = true;
   } else if (itemScale < MAX_ITEM_SCALE) {
     itemScale += STEP_ITEM_SCALE;
     setChangeTextValueScale();
     setStyleTransform();
   }
-  biggerButton.disabled = false;
-  document.querySelector('.scale__value').textContent = itemScale;
-});
-
-// ЭФФЕКТЫ =======================================
-
-
-const placeSlider = document.querySelector('.effect-level__slider');
-const placeSliderTag = document.querySelector('.img-upload__effect-level');
-const effectRadio = document.querySelectorAll('.effects__radio');
-const inputValueDepthEffect = document.querySelector('.effect-level__value');
-
-function setEffect (item) {
-  previewImgUpload.removeAttribute('class');
-  previewImgUpload.setAttribute('class', `img-upload__preview effects__preview--${item}`);
+  biggerScaleButton.disabled = false;
+  document.querySelector('.scale__control--value').setAttribute('value', `${itemScale}%`);
 }
 
-function setUpdateSlider (currentItemEffect) {
-  placeSlider.noUiSlider.updateOptions(currentItemEffect);
-}
-
-//-------------------------------------------------------------
-
-
-noUiSlider.create(placeSlider, {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  start: 80,
-  step: 1,
-  connect: 'lower',
-});
-
-
-// ОБРАБОТЧИК СОБЫТИЯ КЛИКА ПО ЭФФЕКТУ---------------
-
-effectRadio.forEach( (item) => {
-  item.addEventListener('click', () => {
-    const valueItemEffect = item.value;
-    setEffect(valueItemEffect);
-    if (valueItemEffect === 'none') {
-      placeSliderTag.classList.add('hidden');
-      inputValueDepthEffect.setAttribute('step', '');
-      inputValueDepthEffect.setAttribute('value', '');
-    } else {
-      placeSliderTag.classList.remove('hidden');
-      setUpdateSlider(setRenderSliderForCurrentEffect(valueItemEffect));
-      setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueItemEffect));
-    }
-
-    placeSlider.noUiSlider.on('update', (__, ___, currentItemSlider) => {
-      inputValueDepthEffect.setAttribute('value', `${currentItemSlider}`);
-      previewImgUpload.style.filter = setChangeValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0]);
-      document.querySelector('.effect__value').textContent = `filter: ${setChangeValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0])}`;
-    });
-
-  });
-});
-
-// --------------------------------------------------
 
 function setChangeValueDepthEffect (currentEffect) {
   inputValueDepthEffect.setAttribute('step', `${currentEffect.step}`);
@@ -323,4 +338,4 @@ function setChangeValuesFilterToImgUploadPreview (currentEffect, currentItemSlid
   }
 }
 
-export {editorUploadPhoto};
+export {editorUploadPhoto, setOpenEditorWindow, setCloseEditorWindow, fileUploaderButton};
