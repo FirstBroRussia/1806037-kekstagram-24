@@ -3,17 +3,6 @@ import { randomNumeric } from './util.js';
 
 const blockFilterPhoto = document.querySelector('.img-filters.container');
 
-//=========================================
-function debounce ( callback, delay ) {
-  let timeout;
-  return function() {
-    clearTimeout( timeout );
-    timeout = setTimeout( callback, delay );
-  };
-}
-
-//============================================
-
 function setDeleteClassFilterButtonHighLights () {
   const buttonsFilter = document.querySelectorAll('.img-filters__button');
   for (const buttonFilter of buttonsFilter) {
@@ -58,46 +47,36 @@ function setRenderPhotoMiniaturesByDiscussedFilter (data) {
 function setShowWindowsWithFilters (data) {
   blockFilterPhoto.classList.remove('img-filters--inactive');
 
-  function setClickToFilterButton (evt) {
+  let setTimeOutOperation;
 
-    let aaa;
+  function setClickToFilterButton (evt) {
 
     if (evt.target.closest('#filter-default')) {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-default').classList.add('img-filters__button--active');
-
-      aaa = debounce(() => {
+      clearTimeout(setTimeOutOperation);
+      setTimeOutOperation = setTimeout(() => {
         setClearPicturesList();
         setRenderPhotoMuniatures(data);
-      }, 1000);
-      aaa();
-      //setClearPicturesList();
-      //setRenderPhotoMuniatures(data);
+      }, 500);
     } else if (evt.target.closest('#filter-random')) {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-random').classList.add('img-filters__button--active');
-
-      aaa = debounce(() => {
+      clearTimeout(setTimeOutOperation);
+      setTimeOutOperation = setTimeout(() => {
         setClearPicturesList();
         setRenderPhotoMiniaturesByRandomFilter(data);
-      }, 1000);
-      aaa();
-      //setClearPicturesList();
-      //setRenderPhotoMiniaturesByRandomFilter(data);
+      }, 500);
     } else if (evt.target.closest('#filter-discussed')) {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-discussed').classList.add('img-filters__button--active');
-
-      aaa = debounce(() => {
+      clearTimeout(setTimeOutOperation);
+      setTimeOutOperation = setTimeout(() => {
         setClearPicturesList();
         setRenderPhotoMiniaturesByDiscussedFilter(data);
-      }, 1000);
-      aaa();
-      //setClearPicturesList();
-      //setRenderPhotoMiniaturesByDiscussedFilter(data);
+      }, 500);
     }
   }
-  //const debouncedCallback = debounce(setClickToFilterButton, 500);
 
   blockFilterPhoto.addEventListener('click', setClickToFilterButton);
 }
