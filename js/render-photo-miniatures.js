@@ -5,7 +5,7 @@ const template = document.querySelector('#picture').content.querySelector('a');
 const picturesFragment = document.createDocumentFragment();
 
 
-function setRenderPhotoMuniatures (data) {
+function setRenderPhotoMiniatures (data) {
   data.forEach( (item) => {
     const photoUser = document.createElement('div');
     photoUser.classList.add('photo-from-server');
@@ -22,4 +22,4 @@ function setRenderPhotoMuniatures (data) {
 }
 
 
-export {containerPhotoList, setRenderPhotoMuniatures};
+export {containerPhotoList, setRenderPhotoMiniatures};

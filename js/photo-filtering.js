@@ -1,9 +1,9 @@
-import { containerPhotoList, setRenderPhotoMuniatures } from './render-photo-miniatures.js';
-import { randomNumeric } from './util.js';
+import {containerPhotoList, setRenderPhotoMiniatures} from './render-photo-miniatures.js';
+import {randomNumeric} from './util.js';
 
 const blockFilterPhoto = document.querySelector('.img-filters.container');
 
-const UNIQUE_VALUES_LENGTH = 10;
+const QUANTITY_MINIATURES = 10;
 const TIME_OUT_TO_DEBOUNCE = 500;
 
 function setDeleteClassFilterButtonHighLights () {
@@ -22,15 +22,15 @@ function setClearPicturesList () {
 
 function setRenderPhotoMiniaturesByRandomFilter (data) {
   const uniqueValues = [];
-  while (uniqueValues.length < UNIQUE_VALUES_LENGTH) {
+  while (uniqueValues.length < QUANTITY_MINIATURES) {
     const randomItem = randomNumeric(0, data.length - 1);
     if (!uniqueValues.includes(randomItem)) {
       uniqueValues.push(randomItem);
     }
   }
   const convertedDataByRandomFilter = data.map( (item, index, items) => items[uniqueValues[index]])
-    .slice(0,10);
-  setRenderPhotoMuniatures(convertedDataByRandomFilter);
+    .slice(0,QUANTITY_MINIATURES);
+  setRenderPhotoMiniatures(convertedDataByRandomFilter);
 }
 
 function setRenderPhotoMiniaturesByDiscussedFilter (data) {
@@ -41,7 +41,7 @@ function setRenderPhotoMiniaturesByDiscussedFilter (data) {
     }),
   )
     .sort( (itemA, itemB) => itemB.commentsListLength - itemA.commentsListLength);
-  setRenderPhotoMuniatures(convertedDataByDiscussionFilter);
+  setRenderPhotoMiniatures(convertedDataByDiscussionFilter);
 }
 
 function setShowWindowsWithFilters (data) {
@@ -57,7 +57,7 @@ function setShowWindowsWithFilters (data) {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         setClearPicturesList();
-        setRenderPhotoMuniatures(data);
+        setRenderPhotoMiniatures(data);
       }, TIME_OUT_TO_DEBOUNCE);
     }
 

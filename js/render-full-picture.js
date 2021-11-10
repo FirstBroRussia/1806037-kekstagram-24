@@ -1,9 +1,6 @@
 /* eslint-disable no-use-before-define */
 import {isEnterKey, isEscapeKey} from './util.js';
 
-let currentVisibleComments = 0;
-let currentDataList;
-
 const containerPhotoList = document.querySelector('.pictures.container');
 const bigPictureWindow = document.querySelector('.big-picture');
 const socialCommentCount = document.querySelector('.social__comment-count');
@@ -16,6 +13,9 @@ const socialCommentsList = document.querySelector('.social__comments');
 const blockSocialComment = document.querySelector('.social__comment');
 
 const SET_VALUE_QUANTITY_COMMENTS = 5;
+
+let currentVisibleComments = 0;
+let currentDataList;
 // ================================================================
 
 const setDataListFromServer = function (data) {
@@ -38,16 +38,17 @@ function setClickToPhotoMiniatures (evt) {
 }
 
 function setSelectElement (evt) {
-  if (isEnterKey(evt)) {
-    const currentPhoto = evt.target.closest('a[class="picture"]');
-    if (!currentPhoto) {
-      return;
-    }
-    setRenderBigPicture(currentPhoto);
-    setRenderCommentsList(currentPhoto, currentDataList);
-    setRenderShowCommentsList();
-    setOpenBigPicture();
+  if (!isEnterKey(evt)) {
+    return;
   }
+  const currentPhoto = evt.target.closest('a[class="picture"]');
+  if (!currentPhoto) {
+    return;
+  }
+  setRenderBigPicture(currentPhoto);
+  setRenderCommentsList(currentPhoto, currentDataList);
+  setRenderShowCommentsList();
+  setOpenBigPicture();
 }
 
 

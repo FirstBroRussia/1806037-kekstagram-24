@@ -1,12 +1,11 @@
 /* eslint-disable no-use-before-define */
 
-import { isEscapeKey, VALID_FILE_EXTENSIONS } from './util.js';
-import { bodyList } from './render-full-picture.js';
-import { regExpList, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement } from './functions-to-module-form.js';
-import { setDataToServer, setSuccessToUploadPhotos, setErrorToUploadPhotos } from './api.js';
+import {isEscapeKey, VALID_FILE_EXTENSIONS} from './util.js';
+import {bodyList} from './render-full-picture.js';
+import {regExpList, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement} from './functions-to-module-form.js';
+import {setSuccessToUploadPhotos, setErrorToUploadPhotos} from './functions-to-module-api.js';
+import {setDataToServer} from './api.js';
 import '/nouislider/nouislider.js';
-
-let itemScale = 100;
 
 const form = document.querySelector('.img-upload__form');
 const fileUploaderButton = document.querySelector('#upload-file');
@@ -32,6 +31,9 @@ const MAX_QUANTITY_HASH_TAGS = 5;
 const MIN_ITEM_SCALE = 25;
 const MAX_ITEM_SCALE = 100;
 const STEP_ITEM_SCALE = 25;
+
+
+let itemScale = 100;
 
 // Моменты по контролу загрузки фото
 
@@ -127,7 +129,7 @@ function setCloseEditorWindow () {
   fileUploaderButton.value = '';
   inputTextHashTags.value = '';
   textComment.value = '';
-  lengthTextComment.textContent = '0/140';
+  lengthTextComment.textContent = `0/${MAX_LENGTH_TEXT_COMMENT_AREA}`;
   placeSliderTag.classList.add('hidden');
   currentImageUpload.src = '';
   currentImageUpload.alt = '';
@@ -168,29 +170,31 @@ inputTextHashTags.addEventListener('focusout', () => {
 
 // Моменты по валидации поля ввода Хештегов
 
-
 function setValidationCheckForInput (itemsTextHashTags, valueTextHashTags, itemsRegExp) {
   if (itemsTextHashTags.some(setTestArrayToFirstHash)) {
     return 'Хеш-тег должен начинаться с символа # (решётка)';
+  }
+  if (itemsRegExp.regExpOverOneHash.test(valueTextHashTags) || itemsRegExp.regExpNoSpaceBeforeHash.test(valueTextHashTags)) {
+    return 'Между хеш-тегами обязан быть один пробел';
+  }
+  if (itemsRegExp.regExpOneHash.test(valueTextHashTags)) {
+    return 'Хеш-тег не может состоять только из одной решётки (#)';
+  }
+  if (itemsTextHashTags.length > MAX_QUANTITY_HASH_TAGS) {
+    return 'Не более пяти хеш-тегов';
   } else {
-    if (itemsRegExp.regExpOverOneHash.test(valueTextHashTags) || itemsRegExp.regExpNoSpaceBeforeHash.test(valueTextHashTags)) {
-      return 'Между хеш-тегами обязан быть один пробел';
-    } else if (itemsRegExp.regExpOneHash.test(valueTextHashTags)) {
-      return 'Хеш-тег не может состоять только из одной решётки (#)';
-    } else if (itemsTextHashTags.length > MAX_QUANTITY_HASH_TAGS) {
-      return 'Не более пяти хеш-тегов';
-    } else {
-      return '';
-    }
+    return '';
   }
 }
 
 function setValidationCheckForSubmit (itemsTextHashTags) {
   if (itemsTextHashTags.some(setTestArrayToASingleCharacterString)) {
     return 'Хеш-тег не может состоять только из одного символа # (решётка)';
-  } else if (setTestArrayToSameHashTags(itemsTextHashTags)) {
+  }
+  if (setTestArrayToSameHashTags(itemsTextHashTags)) {
     return 'Один и тот же хэш-тег не может быть использован дважды';
-  } else if (itemsTextHashTags.some(setTestArrayToMainRegExp)) {
+  }
+  if (itemsTextHashTags.some(setTestArrayToMainRegExp)) {
     return 'Хеш-тег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.';
   } else {
     return '';
@@ -225,6 +229,7 @@ function setSubmitToFormField (evt) {
 }
 
 function setChangeInputFieldHashTags () {
+  inputTextHashTags.classList.remove('border-hash-tags');
   const returnValue = setUniqueOperationsOverInputValueHashTags();
   inputTextHashTags.setCustomValidity(setValidationCheckForInput(returnValue[0], returnValue[1], regExpList));
   inputTextHashTags.reportValidity();
