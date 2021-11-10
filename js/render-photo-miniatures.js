@@ -1,12 +1,14 @@
-import { setRenderBigPictureOverlay } from './render-full-picture.js';
+import {setDataListFromServer} from './render-full-picture.js';
 
-const picturesList = document.querySelector('.pictures');
+const containerPhotoList = document.querySelector('.pictures.container');
 const template = document.querySelector('#picture').content.querySelector('a');
 const picturesFragment = document.createDocumentFragment();
+
 
 function setRenderPhotoMuniatures (data) {
   data.forEach( (item) => {
     const photoUser = document.createElement('div');
+    photoUser.classList.add('photo-from-server');
     const templateClone = template.cloneNode(true);
     templateClone.querySelector('.picture__img').src = item.url;
     templateClone.querySelector('.picture__comments').textContent = item.comments.length;
@@ -14,8 +16,10 @@ function setRenderPhotoMuniatures (data) {
     photoUser.appendChild(templateClone);
     picturesFragment.appendChild(photoUser);
   });
-  picturesList.appendChild(picturesFragment);
-  setRenderBigPictureOverlay(data);
+  containerPhotoList.appendChild(picturesFragment);
+
+  setDataListFromServer(data);
 }
 
-export {picturesList, setRenderPhotoMuniatures};
+
+export {containerPhotoList, setRenderPhotoMuniatures};
