@@ -3,6 +3,9 @@ import { randomNumeric } from './util.js';
 
 const blockFilterPhoto = document.querySelector('.img-filters.container');
 
+const UNIQUE_VALUES_LENGTH = 10;
+const TIME_OUT_TO_DEBOUNCE = 500;
+
 function setDeleteClassFilterButtonHighLights () {
   const buttonsFilter = document.querySelectorAll('.img-filters__button');
   for (const buttonFilter of buttonsFilter) {
@@ -19,27 +22,24 @@ function setClearPicturesList () {
 
 function setRenderPhotoMiniaturesByRandomFilter (data) {
   const uniqueValues = [];
-  while (uniqueValues.length < 25) {
+  while (uniqueValues.length < UNIQUE_VALUES_LENGTH) {
     const randomItem = randomNumeric(0, data.length - 1);
     if (!uniqueValues.includes(randomItem)) {
       uniqueValues.push(randomItem);
     }
   }
-  const convertedDataByRandomFilter = data.map( (item, index, items) => {
-    item = items[uniqueValues[index]];
-    return item;
-  })
+  const convertedDataByRandomFilter = data.map( (item, index, items) => items[uniqueValues[index]])
     .slice(0,10);
   setRenderPhotoMuniatures(convertedDataByRandomFilter);
 }
 
 function setRenderPhotoMiniaturesByDiscussedFilter (data) {
-  const convertedDataByDiscussionFilter = data.map( (item) => {
-    const currentElementObject = item;
-    const newElementObject = {commentsListLength: item.comments.length};
-    item = Object.assign(currentElementObject, newElementObject);
-    return item;
-  })
+  const convertedDataByDiscussionFilter = data.map( (item) =>
+    ({
+      ...item,
+      commentsListLength: item.comments.length,
+    }),
+  )
     .sort( (itemA, itemB) => itemB.commentsListLength - itemA.commentsListLength);
   setRenderPhotoMuniatures(convertedDataByDiscussionFilter);
 }
@@ -47,34 +47,46 @@ function setRenderPhotoMiniaturesByDiscussedFilter (data) {
 function setShowWindowsWithFilters (data) {
   blockFilterPhoto.classList.remove('img-filters--inactive');
 
-  let setTimeOutOperation;
+  let timeout;
 
   function setClickToFilterButton (evt) {
 
-    if (evt.target.closest('#filter-default')) {
+    function setTargetToFilterDefault () {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-default').classList.add('img-filters__button--active');
-      clearTimeout(setTimeOutOperation);
-      setTimeOutOperation = setTimeout(() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
         setClearPicturesList();
         setRenderPhotoMuniatures(data);
-      }, 500);
-    } else if (evt.target.closest('#filter-random')) {
+      }, TIME_OUT_TO_DEBOUNCE);
+    }
+
+    function setClickToFilterRandom () {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-random').classList.add('img-filters__button--active');
-      clearTimeout(setTimeOutOperation);
-      setTimeOutOperation = setTimeout(() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
         setClearPicturesList();
         setRenderPhotoMiniaturesByRandomFilter(data);
-      }, 500);
-    } else if (evt.target.closest('#filter-discussed')) {
+      }, TIME_OUT_TO_DEBOUNCE);
+    }
+
+    function setClickToFilterDiscuss () {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-discussed').classList.add('img-filters__button--active');
-      clearTimeout(setTimeOutOperation);
-      setTimeOutOperation = setTimeout(() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
         setClearPicturesList();
         setRenderPhotoMiniaturesByDiscussedFilter(data);
-      }, 500);
+      }, TIME_OUT_TO_DEBOUNCE);
+    }
+
+    if (evt.target.closest('#filter-default')) {
+      setTargetToFilterDefault();
+    } else if (evt.target.closest('#filter-random')) {
+      setClickToFilterRandom();
+    } else if (evt.target.closest('#filter-discussed')) {
+      setClickToFilterDiscuss();
     }
   }
 
