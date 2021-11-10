@@ -28,19 +28,23 @@ containerPhotoList.addEventListener('keydown', setSelectElement);
 
 function setClickToPhotoMiniatures (evt) {
   const currentPhoto = evt.target.closest('a[class="picture"]');
-  setRenderBigPicture(currentPhoto);
-  setRenderCommentsList(currentPhoto, currentDataList);
-  setRenderShowCommentsList();
-  setOpenBigPicture();
+  if (currentPhoto) {
+    setRenderBigPicture(currentPhoto);
+    setRenderCommentsList(currentPhoto, currentDataList);
+    setRenderShowCommentsList();
+    setOpenBigPicture();
+  }
 }
 
 function setSelectElement (evt) {
   if (isEnterKey(evt)) {
     const currentPhoto = evt.target.closest('a[class="picture"]');
-    setRenderBigPicture(currentPhoto, currentDataList);
-    setRenderCommentsList(currentPhoto, currentDataList);
-    setRenderShowCommentsList();
-    setOpenBigPicture();
+    if (currentPhoto) {
+      setRenderBigPicture(currentPhoto);
+      setRenderCommentsList(currentPhoto, currentDataList);
+      setRenderShowCommentsList();
+      setOpenBigPicture();
+    }
   }
 }
 
