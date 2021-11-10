@@ -128,7 +128,7 @@ function setRenderButtonForUploadComments () {
   }
 }
 
-// =====================================================================================================
+// +=====================================================================================================
 
 function setRenderBigPicture (currentClickedPhoto) {
   const bigPicture = document.querySelector('.big-picture__img');
