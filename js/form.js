@@ -1,8 +1,8 @@
 /* eslint-disable no-use-before-define */
 
 import {isEscapeKey, VALID_FILE_EXTENSIONS} from './util.js';
-import {bodyList} from './render-full-picture.js';
-import {regExpList, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement} from './functions-to-module-form.js';
+import {bodyContent} from './render-full-picture.js';
+import {regExpBlock, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement} from './functions-to-module-form.js';
 import {setSuccessToUploadPhotos, setErrorToUploadPhotos} from './functions-to-module-api.js';
 import {setDataToServer} from './api.js';
 import '/nouislider/nouislider.js';
@@ -20,10 +20,10 @@ const textValueScale = document.querySelector('.scale__control--value');
 const effectNoneButton = document.querySelector('#effect-none');
 const smallerScaleButton = document.querySelector('.scale__control--smaller');
 const biggerScaleButton = document.querySelector('.scale__control--bigger');
-const previewImgUpload = document.querySelector('.img-upload__preview');
+const previewImageUpload = document.querySelector('.img-upload__preview');
 const placeSlider = document.querySelector('.effect-level__slider');
 const placeSliderTag = document.querySelector('.img-upload__effect-level');
-const effectsRadioList = document.querySelectorAll('.effects__radio');
+const effectRadioButtons = document.querySelectorAll('.effects__radio');
 const inputValueDepthEffect = document.querySelector('.effect-level__value');
 
 const MAX_LENGTH_TEXT_COMMENT_AREA = 140;
@@ -33,7 +33,7 @@ const MAX_ITEM_SCALE = 100;
 const STEP_ITEM_SCALE = 25;
 
 
-let itemScale = 100;
+let meaningScale = 100;
 
 // Моменты по контролу загрузки фото
 
@@ -63,8 +63,8 @@ noUiSlider.create(placeSlider, {
 });
 
 function setEffect (item) {
-  previewImgUpload.removeAttribute('class');
-  previewImgUpload.setAttribute('class', `img-upload__preview effects__preview--${item}`);
+  previewImageUpload.removeAttribute('class');
+  previewImageUpload.setAttribute('class', `img-upload__preview effects__preview--${item}`);
 }
 
 function setUpdateSlider (currentItemEffect) {
@@ -86,27 +86,27 @@ function setChangeInputFieldToTextComment () {
 
 function setOpenEditorWindow () {
   fileUploaderButton.disabled = true;
-  bodyList.classList.add('modal-open');
+  bodyContent.classList.add('modal-open');
   editorUploadPhoto.classList.remove('hidden');
 
-  effectsRadioList.forEach( (item) => {
-    item.addEventListener('click', () => {
-      const valueItemEffect = item.value;
-      setEffect(valueItemEffect);
+  effectRadioButtons.forEach( (radioButton) => {
+    radioButton.addEventListener('click', () => {
+      const valueCurrentEffect = radioButton.value;
+      setEffect(valueCurrentEffect);
 
-      function setChangeSliderPosition (__, ___, currentItemSlider) {
-        const fixedCurrentItem = +currentItemSlider[0].toFixed(1);
-        inputValueDepthEffect.setAttribute('value', `${fixedCurrentItem}`);
-        previewImgUpload.style.filter = setChangeValuesFilterToImgUploadPreview(valueItemEffect, currentItemSlider[0]);
+      function setChangeSliderPosition (__, ___, currentMeaningSlider) {
+        const fixedCurrentMeaning = +currentMeaningSlider[0].toFixed(1);
+        inputValueDepthEffect.setAttribute('value', `${fixedCurrentMeaning}`);
+        previewImageUpload.style.filter = setChangeValuesFilterToImgUploadPreview(valueCurrentEffect, currentMeaningSlider[0]);
       }
-      if (valueItemEffect === 'none') {
+      if (valueCurrentEffect === 'none') {
         placeSliderTag.classList.add('hidden');
         inputValueDepthEffect.setAttribute('step', '');
         inputValueDepthEffect.setAttribute('value', '');
       } else {
         placeSliderTag.classList.remove('hidden');
-        setUpdateSlider(setRenderSliderForCurrentEffect(valueItemEffect));
-        setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueItemEffect));
+        setUpdateSlider(setRenderSliderForCurrentEffect(valueCurrentEffect));
+        setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueCurrentEffect));
       }
       placeSlider.noUiSlider.on('update', setChangeSliderPosition);
     });
@@ -124,7 +124,7 @@ function setOpenEditorWindow () {
 
 function setCloseEditorWindow () {
   fileUploaderButton.disabled = false;
-  bodyList.classList.remove('modal-open');
+  bodyContent.classList.remove('modal-open');
   editorUploadPhoto.classList.add('hidden');
   fileUploaderButton.value = '';
   inputTextHashTags.value = '';
@@ -133,7 +133,7 @@ function setCloseEditorWindow () {
   placeSliderTag.classList.add('hidden');
   currentImageUpload.src = '';
   currentImageUpload.alt = '';
-  previewImgUpload.style.transform = 'scale(1)';
+  previewImageUpload.style.transform = 'scale(1)';
   textValueScale.value = '100%';
   effectNoneButton.click();
   setEffect('none');
@@ -170,31 +170,31 @@ inputTextHashTags.addEventListener('focusout', () => {
 
 // Моменты по валидации поля ввода Хештегов
 
-function setValidationCheckForInput (itemsTextHashTags, valueTextHashTags, itemsRegExp) {
-  if (itemsTextHashTags.some(setTestArrayToFirstHash)) {
+function setValidationCheckForInput (meaningsTextHashTags, valueTextHashTags, meaningsRegExp) {
+  if (meaningsTextHashTags.some(setTestArrayToFirstHash)) {
     return 'Хеш-тег должен начинаться с символа # (решётка)';
   }
-  if (itemsRegExp.regExpOverOneHash.test(valueTextHashTags) || itemsRegExp.regExpNoSpaceBeforeHash.test(valueTextHashTags)) {
+  if (meaningsRegExp.regExpOverOneHash.test(valueTextHashTags) || meaningsRegExp.regExpNoSpaceBeforeHash.test(valueTextHashTags)) {
     return 'Между хеш-тегами обязан быть один пробел';
   }
-  if (itemsRegExp.regExpOneHash.test(valueTextHashTags)) {
+  if (meaningsRegExp.regExpOneHash.test(valueTextHashTags)) {
     return 'Хеш-тег не может состоять только из одной решётки (#)';
   }
-  if (itemsTextHashTags.length > MAX_QUANTITY_HASH_TAGS) {
+  if (meaningsTextHashTags.length > MAX_QUANTITY_HASH_TAGS) {
     return 'Не более пяти хеш-тегов';
   } else {
     return '';
   }
 }
 
-function setValidationCheckForSubmit (itemsTextHashTags) {
-  if (itemsTextHashTags.some(setTestArrayToASingleCharacterString)) {
+function setValidationCheckForSubmit (meaningsTextHashTags) {
+  if (meaningsTextHashTags.some(setTestArrayToASingleCharacterString)) {
     return 'Хеш-тег не может состоять только из одного символа # (решётка)';
   }
-  if (setTestArrayToSameHashTags(itemsTextHashTags)) {
+  if (setTestArrayToSameHashTags(meaningsTextHashTags)) {
     return 'Один и тот же хэш-тег не может быть использован дважды';
   }
-  if (itemsTextHashTags.some(setTestArrayToMainRegExp)) {
+  if (meaningsTextHashTags.some(setTestArrayToMainRegExp)) {
     return 'Хеш-тег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.';
   } else {
     return '';
@@ -204,13 +204,13 @@ function setValidationCheckForSubmit (itemsTextHashTags) {
 function setUniqueOperationsOverInputValueHashTags () {
   const valueTextHashTags = inputTextHashTags.value.toLowerCase();
   const lineTextHashTags = valueTextHashTags.split(' ');
-  const refreshItemsTextHashTags = setDeleteEmptyElement(lineTextHashTags);
-  return [refreshItemsTextHashTags, valueTextHashTags];
+  const refreshMeaningsTextHashTags = setDeleteEmptyElement(lineTextHashTags);
+  return [refreshMeaningsTextHashTags, valueTextHashTags];
 }
 
 function setPopupMessageToLoading () {
   editorUploadPhoto.classList.add('hidden');
-  bodyList.appendChild(messageToLoading);
+  bodyContent.appendChild(messageToLoading);
 }
 
 function setSubmitToFormField (evt) {
@@ -231,41 +231,41 @@ function setSubmitToFormField (evt) {
 function setChangeInputFieldHashTags () {
   inputTextHashTags.classList.remove('border-hash-tags');
   const returnValue = setUniqueOperationsOverInputValueHashTags();
-  inputTextHashTags.setCustomValidity(setValidationCheckForInput(returnValue[0], returnValue[1], regExpList));
+  inputTextHashTags.setCustomValidity(setValidationCheckForInput(returnValue[0], returnValue[1], regExpBlock));
   inputTextHashTags.reportValidity();
 }
 
 
 function setStyleTransform () {
-  previewImgUpload.style.transform = `scale(${itemScale/100})`;
+  previewImageUpload.style.transform = `scale(${meaningScale/100})`;
 }
 
 function setChangeTextValueScale () {
-  textValueScale.value = `${itemScale}%`;
+  textValueScale.value = `${meaningScale}%`;
 }
 
 function setClickToSmallerScaleButton () {
-  if (itemScale === MIN_ITEM_SCALE) {
+  if (meaningScale === MIN_ITEM_SCALE) {
     smallerScaleButton.disabled = true;
-  } else if (itemScale > MIN_ITEM_SCALE) {
-    itemScale -= STEP_ITEM_SCALE;
+  } else if (meaningScale > MIN_ITEM_SCALE) {
+    meaningScale -= STEP_ITEM_SCALE;
     setChangeTextValueScale();
     setStyleTransform();
   }
   smallerScaleButton.disabled = false;
-  document.querySelector('.scale__control--value').setAttribute('value', `${itemScale}%`);
+  document.querySelector('.scale__control--value').setAttribute('value', `${meaningScale}%`);
 }
 
 function setClickToBiggerScaleButton () {
-  if (itemScale === MAX_ITEM_SCALE) {
+  if (meaningScale === MAX_ITEM_SCALE) {
     biggerScaleButton.disabled = true;
-  } else if (itemScale < MAX_ITEM_SCALE) {
-    itemScale += STEP_ITEM_SCALE;
+  } else if (meaningScale < MAX_ITEM_SCALE) {
+    meaningScale += STEP_ITEM_SCALE;
     setChangeTextValueScale();
     setStyleTransform();
   }
   biggerScaleButton.disabled = false;
-  document.querySelector('.scale__control--value').setAttribute('value', `${itemScale}%`);
+  document.querySelector('.scale__control--value').setAttribute('value', `${meaningScale}%`);
 }
 
 

@@ -1,4 +1,4 @@
-import {containerPhotoList, setRenderPhotoMiniatures} from './render-photo-miniatures.js';
+import {containerPhotoBlock, setRenderPhotoMiniatures} from './render-photo-miniatures.js';
 import {randomNumeric} from './util.js';
 
 const blockFilterPhoto = document.querySelector('.img-filters.container');
@@ -14,8 +14,8 @@ function setDeleteClassFilterButtonHighLights () {
 }
 
 function setClearPicturesList () {
-  const picturesList = containerPhotoList.querySelectorAll('.photo-from-server');
-  for (const picture of picturesList) {
+  const picturesBlock = containerPhotoBlock.querySelectorAll('.photo-from-server');
+  for (const picture of picturesBlock) {
     picture.remove();
   }
 }
@@ -23,24 +23,24 @@ function setClearPicturesList () {
 function setRenderPhotoMiniaturesByRandomFilter (data) {
   const uniqueValues = [];
   while (uniqueValues.length < QUANTITY_MINIATURES) {
-    const randomItem = randomNumeric(0, data.length - 1);
-    if (!uniqueValues.includes(randomItem)) {
-      uniqueValues.push(randomItem);
+    const randomMeaning = randomNumeric(0, data.length - 1);
+    if (!uniqueValues.includes(randomMeaning)) {
+      uniqueValues.push(randomMeaning);
     }
   }
-  const convertedDataByRandomFilter = data.map( (item, index, items) => items[uniqueValues[index]])
+  const convertedDataByRandomFilter = data.map( (meaning, index, meanings) => meanings[uniqueValues[index]])
     .slice(0,QUANTITY_MINIATURES);
   setRenderPhotoMiniatures(convertedDataByRandomFilter);
 }
 
 function setRenderPhotoMiniaturesByDiscussedFilter (data) {
-  const convertedDataByDiscussionFilter = data.map( (item) =>
+  const convertedDataByDiscussionFilter = data.map( (meaning) =>
     ({
-      ...item,
-      commentsListLength: item.comments.length,
+      ...meaning,
+      commentsListLength: meaning.comments.length,
     }),
   )
-    .sort( (itemA, itemB) => itemB.commentsListLength - itemA.commentsListLength);
+    .sort( (meaningA, meaningB) => meaningB.commentsListLength - meaningA.commentsListLength);
   setRenderPhotoMiniatures(convertedDataByDiscussionFilter);
 }
 

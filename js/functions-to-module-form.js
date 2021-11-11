@@ -1,4 +1,4 @@
-const regExpList = {
+const regExpBlock = {
   regExpHashTag : /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/,
   regExpFirstSymbol : /^#/,
   regExpOneHash : /#\s/,
@@ -7,35 +7,35 @@ const regExpList = {
 };
 
 
-function setTestArrayToFirstHash (item) {
-  if (!regExpList.regExpFirstSymbol.test(item) && item.length > 0) {
+function setTestArrayToFirstHash (meaning) {
+  if (!regExpBlock.regExpFirstSymbol.test(meaning) && meaning.length > 0) {
     return true;
   }
 }
 
-function setTestArrayToMainRegExp (item) {
-  return !regExpList.regExpHashTag.test(item);
+function setTestArrayToMainRegExp (meaning) {
+  return !regExpBlock.regExpHashTag.test(meaning);
 }
 
-function setTestArrayToASingleCharacterString (item) {
-  if (item === '#') {
+function setTestArrayToASingleCharacterString (meaning) {
+  if (meaning === '#') {
     return true;
   }
 }
 
-function setTestArrayToSameHashTags (items) {
-  for (let index = 0; index < items.length; index++) {
-    const customArray = items.slice(index + 1);
-    if (customArray.some( (item) => item === items[index])) {
+function setTestArrayToSameHashTags (meanings) {
+  for (let index = 0; index < meanings.length; index++) {
+    const convertedMeanings = meanings.slice(index + 1);
+    if (convertedMeanings.some( (meaning) => meaning === meanings[index])) {
       return true;
     }
   }
 }
 
-function setDeleteEmptyElement (items) {
-  const refreshItemsTextHashTags = items.filter( (item) => !(item === ''));
-  return refreshItemsTextHashTags;
+function setDeleteEmptyElement (meanings) {
+  const refreshMeaningsTextHashTags = meanings.filter( (meaning) => !(meaning === ''));
+  return refreshMeaningsTextHashTags;
 }
 
 
-export {regExpList, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement};
+export {regExpBlock, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement};

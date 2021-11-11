@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import {setCloseEditorWindow, fileUploaderButton} from './form.js';
-import {bodyList} from './render-full-picture.js';
+import {bodyContent} from './render-full-picture.js';
 import {isEscapeKey} from './util.js';
 
 
@@ -21,15 +21,15 @@ function setSuccessToUploadPhotos () {
 
 
 function setSuccessPopup () {
-  bodyList.classList.add('modal-open');
+  bodyContent.classList.add('modal-open');
   successTemplate.classList.remove('hidden');
-  bodyList.appendChild(successTemplate);
+  bodyContent.appendChild(successTemplate);
 
   document.addEventListener('keydown', setCloseByKeydownSuccessPopup);
   document.addEventListener('click', setCloseByClickSuccessPopup);
 
   function setOperationToCloseSuccessPopup () {
-    bodyList.classList.remove('modal-open');
+    bodyContent.classList.remove('modal-open');
     successTemplate.remove();
     document.removeEventListener('keydown', setCloseByKeydownSuccessPopup);
     document.removeEventListener('click', setCloseByClickSuccessPopup);
@@ -58,9 +58,9 @@ function setErrorToUploadPhotos () {
 }
 
 function setErrorPopup () {
-  bodyList.classList.add('modal-open');
+  bodyContent.classList.add('modal-open');
   errorTemplate.classList.remove('hidden');
-  bodyList.appendChild(errorTemplate);
+  bodyContent.appendChild(errorTemplate);
 
   document.addEventListener('keydown', setCloseByKeydownErrorPopup);
   document.addEventListener('click', setCloseByClickErrorPopup);
@@ -80,7 +80,7 @@ function setErrorPopup () {
   }
 
   function setOperationToCloseErrorPopup () {
-    bodyList.classList.remove('modal-open');
+    bodyContent.classList.remove('modal-open');
     errorTemplate.remove();
     document.removeEventListener('keydown', setCloseByKeydownErrorPopup);
     document.removeEventListener('click', setCloseByClickErrorPopup);
