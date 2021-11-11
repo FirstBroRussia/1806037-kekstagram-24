@@ -1,11 +1,11 @@
-import {setDataListFromServer} from './render-full-picture.js';
+import {setDataBlockFromServer} from './render-full-picture.js';
 
-const containerPhotoList = document.querySelector('.pictures.container');
+const containerPhotoBlock = document.querySelector('.pictures.container');
 const template = document.querySelector('#picture').content.querySelector('a');
 const picturesFragment = document.createDocumentFragment();
 
 
-function setRenderPhotoMuniatures (data) {
+function setRenderPhotoMiniatures (data) {
   data.forEach( (item) => {
     const photoUser = document.createElement('div');
     photoUser.classList.add('photo-from-server');
@@ -16,10 +16,10 @@ function setRenderPhotoMuniatures (data) {
     photoUser.appendChild(templateClone);
     picturesFragment.appendChild(photoUser);
   });
-  containerPhotoList.appendChild(picturesFragment);
+  containerPhotoBlock.appendChild(picturesFragment);
 
-  setDataListFromServer(data);
+  setDataBlockFromServer(data);
 }
 
 
-export {containerPhotoList, setRenderPhotoMuniatures};
+export {containerPhotoBlock, setRenderPhotoMiniatures};

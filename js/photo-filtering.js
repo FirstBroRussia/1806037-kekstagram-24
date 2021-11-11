@@ -1,9 +1,9 @@
-import { containerPhotoList, setRenderPhotoMuniatures } from './render-photo-miniatures.js';
-import { randomNumeric } from './util.js';
+import {containerPhotoBlock, setRenderPhotoMiniatures} from './render-photo-miniatures.js';
+import {randomNumeric} from './util.js';
 
 const blockFilterPhoto = document.querySelector('.img-filters.container');
 
-const UNIQUE_VALUES_LENGTH = 10;
+const QUANTITY_MINIATURES = 10;
 const TIME_OUT_TO_DEBOUNCE = 500;
 
 function setDeleteClassFilterButtonHighLights () {
@@ -14,34 +14,34 @@ function setDeleteClassFilterButtonHighLights () {
 }
 
 function setClearPicturesList () {
-  const picturesList = containerPhotoList.querySelectorAll('.photo-from-server');
-  for (const picture of picturesList) {
+  const picturesBlock = containerPhotoBlock.querySelectorAll('.photo-from-server');
+  for (const picture of picturesBlock) {
     picture.remove();
   }
 }
 
 function setRenderPhotoMiniaturesByRandomFilter (data) {
   const uniqueValues = [];
-  while (uniqueValues.length < UNIQUE_VALUES_LENGTH) {
-    const randomItem = randomNumeric(0, data.length - 1);
-    if (!uniqueValues.includes(randomItem)) {
-      uniqueValues.push(randomItem);
+  while (uniqueValues.length < QUANTITY_MINIATURES) {
+    const randomMeaning = randomNumeric(0, data.length - 1);
+    if (!uniqueValues.includes(randomMeaning)) {
+      uniqueValues.push(randomMeaning);
     }
   }
-  const convertedDataByRandomFilter = data.map( (item, index, items) => items[uniqueValues[index]])
-    .slice(0,10);
-  setRenderPhotoMuniatures(convertedDataByRandomFilter);
+  const convertedDataByRandomFilter = data.map( (meaning, index, meanings) => meanings[uniqueValues[index]])
+    .slice(0,QUANTITY_MINIATURES);
+  setRenderPhotoMiniatures(convertedDataByRandomFilter);
 }
 
 function setRenderPhotoMiniaturesByDiscussedFilter (data) {
-  const convertedDataByDiscussionFilter = data.map( (item) =>
+  const convertedDataByDiscussionFilter = data.map( (meaning) =>
     ({
-      ...item,
-      commentsListLength: item.comments.length,
+      ...meaning,
+      commentsListLength: meaning.comments.length,
     }),
   )
-    .sort( (itemA, itemB) => itemB.commentsListLength - itemA.commentsListLength);
-  setRenderPhotoMuniatures(convertedDataByDiscussionFilter);
+    .sort( (meaningA, meaningB) => meaningB.commentsListLength - meaningA.commentsListLength);
+  setRenderPhotoMiniatures(convertedDataByDiscussionFilter);
 }
 
 function setShowWindowsWithFilters (data) {
@@ -57,7 +57,7 @@ function setShowWindowsWithFilters (data) {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         setClearPicturesList();
-        setRenderPhotoMuniatures(data);
+        setRenderPhotoMiniatures(data);
       }, TIME_OUT_TO_DEBOUNCE);
     }
 

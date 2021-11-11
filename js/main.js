@@ -1,3 +1,4 @@
+import './functions-to-module-api.js';
 import './api.js';
 import './util.js';
 import './render-photo-miniatures.js';
