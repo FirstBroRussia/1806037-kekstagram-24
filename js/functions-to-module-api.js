@@ -28,12 +28,12 @@ const setSuccessPopup = () => {
   document.addEventListener('keydown', setCloseSuccessPopupEscapeKeyDownHandler);
   document.addEventListener('click', setCloseSuccessPopupClickHandler);
 
-  function setOperationToCloseSuccessPopup () {
+  const setOperationToCloseSuccessPopup = () => {
     bodyContent.classList.remove('modal-open');
     successTemplate.remove();
     document.removeEventListener('keydown', setCloseSuccessPopupEscapeKeyDownHandler);
     document.removeEventListener('click', setCloseSuccessPopupClickHandler);
-  }
+  };
 
   function setCloseSuccessPopupClickHandler (evt) {
     if (!evt.target.closest('[class^="success__"]')) {
@@ -78,12 +78,12 @@ const setErrorPopup = () => {
     }
   }
 
-  function setOperationToCloseErrorPopup () {
+  const setOperationToCloseErrorPopup = () => {
     bodyContent.classList.remove('modal-open');
     errorTemplate.remove();
     document.removeEventListener('keydown', setCloseErrorPopupEscapeKewdownHandler);
     document.removeEventListener('click', setCloseErrorPopupClickHandler);
-  }
+  };
 };
 
 

@@ -49,9 +49,9 @@ const setShowWindowsWithFilters = (data) => {
 
   let timeout;
 
-  function setFilterButtonClickHandler (evt) {
+  const setFilterButtonClickHandler = (evt) => {
 
-    function setTargetToFilterDefault () {
+    const setTargetToFilterDefault = () => {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-default').classList.add('img-filters__button--active');
       clearTimeout(timeout);
@@ -59,9 +59,9 @@ const setShowWindowsWithFilters = (data) => {
         setClearPicturesList();
         setRenderPhotoMiniatures(data);
       }, TIME_OUT_TO_DEBOUNCE);
-    }
+    };
 
-    function setClickToFilterRandom () {
+    const setClickToFilterRandom = () => {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-random').classList.add('img-filters__button--active');
       clearTimeout(timeout);
@@ -69,9 +69,9 @@ const setShowWindowsWithFilters = (data) => {
         setClearPicturesList();
         setRenderPhotoMiniaturesByRandomFilter(data);
       }, TIME_OUT_TO_DEBOUNCE);
-    }
+    };
 
-    function setClickToFilterDiscuss () {
+    const setClickToFilterDiscuss = () => {
       setDeleteClassFilterButtonHighLights();
       evt.target.closest('#filter-discussed').classList.add('img-filters__button--active');
       clearTimeout(timeout);
@@ -79,7 +79,7 @@ const setShowWindowsWithFilters = (data) => {
         setClearPicturesList();
         setRenderPhotoMiniaturesByDiscussedFilter(data);
       }, TIME_OUT_TO_DEBOUNCE);
-    }
+    };
 
     if (evt.target.closest('#filter-default')) {
       setTargetToFilterDefault();
@@ -88,7 +88,7 @@ const setShowWindowsWithFilters = (data) => {
     } else if (evt.target.closest('#filter-discussed')) {
       setClickToFilterDiscuss();
     }
-  }
+  };
 
   blockFilterPhoto.addEventListener('click', setFilterButtonClickHandler);
 };
