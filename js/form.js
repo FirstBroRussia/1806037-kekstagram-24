@@ -48,7 +48,7 @@ const setChangeUploadFile = (evt) => {
   }
 }
 
-const addHandlerChangeFieldFileUpload = fileUploaderButton.addEventListener('change', setChangeUploadFile);
+const fieldFileUploadChangeAddHandler = fileUploaderButton.addEventListener('change', setChangeUploadFile);
 
 // -------------------------------------------------------------------
 noUiSlider.create(placeSlider, {
@@ -107,18 +107,18 @@ const setOpenEditorWindow = () => {
         setUpdateSlider(setRenderSliderForCurrentEffect(valueCurrentEffect));
         setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueCurrentEffect));
       }
-      const addHandlerUpdateSliderPosition = placeSlider.noUiSlider.on('update', setChangeSliderPosition);
+      const sliderPositionUpdateAddHandler = placeSlider.noUiSlider.on('update', setChangeSliderPosition);
     });
   });
 
-  const removeHandlerChangeFieldFileUpload = fileUploaderButton.removeEventListener('change', setChangeUploadFile);
-  const addHandlerClickToButtonCloseUploadWindow = buttonCloseUploadWindow.addEventListener('click', setCloseEditorWindow);
-  const addHandlerEscapeKeydownToCloseUploadWindow = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
-  const addHandlerInputToFieldTextComment  = textComment.addEventListener ('input', setChangeInputFieldToTextComment);
-  const addHandlerInputToFieldHashTags = inputTextHashTags.addEventListener('input', setChangeInputFieldHashTags);
-  const addHandlerClickToSmallerScaleButton  = smallerScaleButton.addEventListener('click', setClickToSmallerScaleButton);
-  const addHandlerClickToBiggerScaleButton  = biggerScaleButton.addEventListener('click', setClickToBiggerScaleButton);
-  const addHandlerSubmitToFieldForm = form.addEventListener('submit', setSubmitToFormField);
+  const fieldFileUploadChangeRemoveHandler = fileUploaderButton.removeEventListener('change', setChangeUploadFile);
+  const buttonCloseUploadWindowClickAddHandler = buttonCloseUploadWindow.addEventListener('click', setCloseEditorWindow);
+  const closeUploadWindowEscapeKeydownAddHandler = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
+  const fieldTextCommentInputAddHandler  = textComment.addEventListener ('input', setChangeInputFieldToTextComment);
+  const fieldHashTagsInputAddHandler = inputTextHashTags.addEventListener('input', setChangeInputFieldHashTags);
+  const smallerScaleButtonClickAddHandler  = smallerScaleButton.addEventListener('click', setClickToSmallerScaleButton);
+  const biggerScaleButtonClickAddHandler  = biggerScaleButton.addEventListener('click', setClickToBiggerScaleButton);
+  const fieldFormSubmitAddHandler = form.addEventListener('submit', setSubmitToFormField);
 }
 
 const setCloseEditorWindow = () => {
@@ -138,34 +138,34 @@ const setCloseEditorWindow = () => {
   effectNoneButton.click();
   setEffect('none');
 
-  const addHandlerChangeFieldFileUpload = fileUploaderButton.addEventListener('change', setChangeUploadFile);
-  const removeHandlerClickToButtonCloseUploadWindow = buttonCloseUploadWindow.removeEventListener('click', setCloseEditorWindow);
-  const removeHandlerEscapeKeydownToCloseUploadWindow = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
-  const removeHandlerInputToFieldTextComment  = textComment.removeEventListener ('input', setChangeInputFieldToTextComment);
-  const removeHandlerInputToFieldHashTags = inputTextHashTags.removeEventListener('input', setChangeInputFieldHashTags);
-  const removeHandlerClickToSmallerScaleButton  = smallerScaleButton.removeEventListener('click', setClickToSmallerScaleButton);
-  const removeHandlerClickToBiggerScaleButton  = biggerScaleButton.removeEventListener('click', setClickToBiggerScaleButton);
-  const removeHandlerUpdateSliderPosition  = placeSlider.noUiSlider.off('update');
-  const removeHandlerSubmitToFieldForm = form.removeEventListener('submit', setSubmitToFormField);
+  const fieldFileUploadChangeAddHandler = fileUploaderButton.addEventListener('change', setChangeUploadFile);
+  const buttonCloseUploadWindowClickRemoveHandler = buttonCloseUploadWindow.removeEventListener('click', setCloseEditorWindow);
+  const closeUploadWindowEscapeKeydownRemoveHandler = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+  const fieldTextCommentInputRemoveHandler  = textComment.removeEventListener ('input', setChangeInputFieldToTextComment);
+  const fieldHashTagsInputRemoveHandler = inputTextHashTags.removeEventListener('input', setChangeInputFieldHashTags);
+  const smallerScaleButtonClickRemoveHandler  = smallerScaleButton.removeEventListener('click', setClickToSmallerScaleButton);
+  const biggerScaleButtonClickRemoveHandler  = biggerScaleButton.removeEventListener('click', setClickToBiggerScaleButton);
+  const fieldFormSubmitRemoveHandler = form.removeEventListener('submit', setSubmitToFormField);
+  const sliderPositionUpdateRemoveHandler  = placeSlider.noUiSlider.off('update');
 }
 
 // Моменты по вводу в поле комментария и хештега при загрузке фото
 
 
-const addHandlerFocusToFieldTextComment = textComment.addEventListener('focus', () => {
-  const removeHandlerEscapeKeydownToCloseUploadWindow = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+const fieldTextCommentFocusAddHandler = textComment.addEventListener('focus', () => {
+  const closeUploadWindowEscapeKeydownRemoveHandler = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
-const addHandlerFocusOutToFieldTextComment = textComment.addEventListener('focusout', () => {
-  const addHandlerEscapeKeydownToCloseUploadWindow = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
+const fieldTextCommentFocusOutAddHandler = textComment.addEventListener('focusout', () => {
+  const closeUploadWindowEscapeKeydownAddHandler = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
-const addHandlerFocusToFieldTextHashTags = inputTextHashTags.addEventListener('focus', () => {
-  const removeHandlerEscapeKeydownToCloseUploadWindow = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+const fieldTextHashTagsFocusAddHandler = inputTextHashTags.addEventListener('focus', () => {
+  const closeUploadWindowEscapeKeydownRemoveHandler = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
-const addHandlerFocusOutToFieldTextHashTags = inputTextHashTags.addEventListener('focusout', () => {
-  const addHandlerEscapeKeydownToCloseUploadWindow = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
+const fieldTextHashTagsFocusOutAddHandler = inputTextHashTags.addEventListener('focusout', () => {
+  const closeUploadWindowEscapeKeydownAddHandler = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
 });
 
 // Моменты по валидации поля ввода Хештегов

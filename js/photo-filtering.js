@@ -90,7 +90,7 @@ const setShowWindowsWithFilters = (data) => {
     }
   }
 
-  const addHandlerClickToFilterButton = blockFilterPhoto.addEventListener('click', setClickToFilterButton);
+  const filterButtonClickAddHandler = blockFilterPhoto.addEventListener('click', setClickToFilterButton);
 }
 
 

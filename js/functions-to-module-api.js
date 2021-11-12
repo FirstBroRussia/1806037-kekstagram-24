@@ -25,14 +25,14 @@ const setSuccessPopup = () => {
   successTemplate.classList.remove('hidden');
   bodyContent.appendChild(successTemplate);
 
-  const addHandlerEscapeKeyDownToCloseSuccessPopup = document.addEventListener('keydown', setCloseByKeydownSuccessPopup);
-  const addHandlerClickToCloseSuccessPopup = document.addEventListener('click', setCloseByClickSuccessPopup);
+  const closeSuccessPopupEscapeKeyDownAddHandler = document.addEventListener('keydown', setCloseByKeydownSuccessPopup);
+  const closeSuccessPopupClickAddHandler = document.addEventListener('click', setCloseByClickSuccessPopup);
 
   function setOperationToCloseSuccessPopup () {
     bodyContent.classList.remove('modal-open');
     successTemplate.remove();
-    const removeHandlerEscapeKeyDownToCloseSuccessPopup = document.removeEventListener('keydown', setCloseByKeydownSuccessPopup);
-    const removeHandlerClickToCloseSuccessPopup = document.removeEventListener('click', setCloseByClickSuccessPopup);
+    const closeSuccessPopupEscapeKeyDownRemoveHandler = document.removeEventListener('keydown', setCloseByKeydownSuccessPopup);
+    const closeSuccessPopupClickRemoveHandler = document.removeEventListener('click', setCloseByClickSuccessPopup);
   }
 
   function setCloseByClickSuccessPopup (evt) {
@@ -61,8 +61,8 @@ const setErrorPopup = () => {
   errorTemplate.classList.remove('hidden');
   bodyContent.appendChild(errorTemplate);
 
-  const addHandlerEscapeKewdownToCloseErrorPopup = document.addEventListener('keydown', setCloseByKeydownErrorPopup);
-  const addHandlerClickToCloseErrorPopup = document.addEventListener('click', setCloseByClickErrorPopup);
+  const closeErrorPopupEscapeKewdownAddHandler = document.addEventListener('keydown', setCloseByKeydownErrorPopup);
+  const closeErrorPopupClickAddHandler = document.addEventListener('click', setCloseByClickErrorPopup);
 
   function setCloseByClickErrorPopup (evt) {
     if (!evt.target.closest('[class^="error__"]')) {
@@ -81,8 +81,8 @@ const setErrorPopup = () => {
   function setOperationToCloseErrorPopup () {
     bodyContent.classList.remove('modal-open');
     errorTemplate.remove();
-    const removeHandlerEscapeKewdownToCloseErrorPopup = document.removeEventListener('keydown', setCloseByKeydownErrorPopup);
-    const removeHandlerClickToCloseErrorPopup = document.removeEventListener('click', setCloseByClickErrorPopup);
+    const closeErrorPopupEscapeKewdownRemoveHandler = document.removeEventListener('keydown', setCloseByKeydownErrorPopup);
+    const closeErrorPopupClickRemoveHandler = document.removeEventListener('click', setCloseByClickErrorPopup);
   }
 }
 
