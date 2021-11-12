@@ -1,29 +1,29 @@
 import {containerPhotoBlock, setRenderPhotoMiniatures} from './render-photo-miniatures.js';
-import {randomNumeric} from './util.js';
-
-const blockFilterPhoto = document.querySelector('.img-filters.container');
+import {setRandomNumeric} from './util.js';
 
 const QUANTITY_MINIATURES = 10;
 const TIME_OUT_TO_DEBOUNCE = 500;
 
-function setDeleteClassFilterButtonHighLights () {
+const blockFilterPhoto = document.querySelector('.img-filters.container');
+
+const setDeleteClassFilterButtonHighLights = () => {
   const buttonsFilter = document.querySelectorAll('.img-filters__button');
   for (const buttonFilter of buttonsFilter) {
     buttonFilter.classList.remove('img-filters__button--active');
   }
 }
 
-function setClearPicturesList () {
+const setClearPicturesList = () => {
   const picturesBlock = containerPhotoBlock.querySelectorAll('.photo-from-server');
   for (const picture of picturesBlock) {
     picture.remove();
   }
 }
 
-function setRenderPhotoMiniaturesByRandomFilter (data) {
+const setRenderPhotoMiniaturesByRandomFilter = (data) => {
   const uniqueValues = [];
   while (uniqueValues.length < QUANTITY_MINIATURES) {
-    const randomMeaning = randomNumeric(0, data.length - 1);
+    const randomMeaning = setRandomNumeric(0, data.length - 1);
     if (!uniqueValues.includes(randomMeaning)) {
       uniqueValues.push(randomMeaning);
     }
@@ -33,7 +33,7 @@ function setRenderPhotoMiniaturesByRandomFilter (data) {
   setRenderPhotoMiniatures(convertedDataByRandomFilter);
 }
 
-function setRenderPhotoMiniaturesByDiscussedFilter (data) {
+const setRenderPhotoMiniaturesByDiscussedFilter = (data) => {
   const convertedDataByDiscussionFilter = data.map( (meaning) =>
     ({
       ...meaning,
@@ -44,7 +44,7 @@ function setRenderPhotoMiniaturesByDiscussedFilter (data) {
   setRenderPhotoMiniatures(convertedDataByDiscussionFilter);
 }
 
-function setShowWindowsWithFilters (data) {
+const setShowWindowsWithFilters = (data) => {
   blockFilterPhoto.classList.remove('img-filters--inactive');
 
   let timeout;
@@ -90,7 +90,7 @@ function setShowWindowsWithFilters (data) {
     }
   }
 
-  blockFilterPhoto.addEventListener('click', setClickToFilterButton);
+  const addHandlerClickToFilterButton = blockFilterPhoto.addEventListener('click', setClickToFilterButton);
 }
 
 

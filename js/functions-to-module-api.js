@@ -7,32 +7,32 @@ import {isEscapeKey} from './util.js';
 const errorTemplate = document.querySelector('#error').content.querySelector('.error__inner');
 const successTemplate = document.querySelector('#success').content.querySelector('.success__inner');
 
-function setShowErrorWhenRequestData (err) {
+function setShowErrorWhenRequestData (onError) {
   document.querySelector('.error-window').classList.remove('hidden');
   document.querySelector('.error-window').classList.add('flex');
-  document.querySelector('.error-text').textContent = err;
+  document.querySelector('.error-text').textContent = onError;
 }
 
-function setSuccessToUploadPhotos () {
+const setSuccessToUploadPhotos = () => {
   setCloseEditorWindow();
   document.querySelector('.img-upload__message').remove();
   setSuccessPopup();
 }
 
 
-function setSuccessPopup () {
+const setSuccessPopup = () => {
   bodyContent.classList.add('modal-open');
   successTemplate.classList.remove('hidden');
   bodyContent.appendChild(successTemplate);
 
-  document.addEventListener('keydown', setCloseByKeydownSuccessPopup);
-  document.addEventListener('click', setCloseByClickSuccessPopup);
+  const addHandlerEscapeKeyDownToCloseSuccessPopup = document.addEventListener('keydown', setCloseByKeydownSuccessPopup);
+  const addHandlerClickToCloseSuccessPopup = document.addEventListener('click', setCloseByClickSuccessPopup);
 
   function setOperationToCloseSuccessPopup () {
     bodyContent.classList.remove('modal-open');
     successTemplate.remove();
-    document.removeEventListener('keydown', setCloseByKeydownSuccessPopup);
-    document.removeEventListener('click', setCloseByClickSuccessPopup);
+    const removeHandlerEscapeKeyDownToCloseSuccessPopup = document.removeEventListener('keydown', setCloseByKeydownSuccessPopup);
+    const removeHandlerClickToCloseSuccessPopup = document.removeEventListener('click', setCloseByClickSuccessPopup);
   }
 
   function setCloseByClickSuccessPopup (evt) {
@@ -48,22 +48,21 @@ function setSuccessPopup () {
       setOperationToCloseSuccessPopup();
     }
   }
-
 }
 
-function setErrorToUploadPhotos () {
+const setErrorToUploadPhotos = () => {
   setCloseEditorWindow();
   document.querySelector('.img-upload__message').remove();
   setErrorPopup();
 }
 
-function setErrorPopup () {
+const setErrorPopup = () => {
   bodyContent.classList.add('modal-open');
   errorTemplate.classList.remove('hidden');
   bodyContent.appendChild(errorTemplate);
 
-  document.addEventListener('keydown', setCloseByKeydownErrorPopup);
-  document.addEventListener('click', setCloseByClickErrorPopup);
+  const addHandlerEscapeKewdownToCloseErrorPopup = document.addEventListener('keydown', setCloseByKeydownErrorPopup);
+  const addHandlerClickToCloseErrorPopup = document.addEventListener('click', setCloseByClickErrorPopup);
 
   function setCloseByClickErrorPopup (evt) {
     if (!evt.target.closest('[class^="error__"]')) {
@@ -82,8 +81,8 @@ function setErrorPopup () {
   function setOperationToCloseErrorPopup () {
     bodyContent.classList.remove('modal-open');
     errorTemplate.remove();
-    document.removeEventListener('keydown', setCloseByKeydownErrorPopup);
-    document.removeEventListener('click', setCloseByClickErrorPopup);
+    const removeHandlerEscapeKewdownToCloseErrorPopup = document.removeEventListener('keydown', setCloseByKeydownErrorPopup);
+    const removeHandlerClickToCloseErrorPopup = document.removeEventListener('click', setCloseByClickErrorPopup);
   }
 }
 

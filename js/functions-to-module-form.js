@@ -7,23 +7,23 @@ const regExpBlock = {
 };
 
 
-function setTestArrayToFirstHash (meaning) {
+const setTestArrayToFirstHash = (meaning) => {
   if (!regExpBlock.regExpFirstSymbol.test(meaning) && meaning.length > 0) {
     return true;
   }
 }
 
-function setTestArrayToMainRegExp (meaning) {
+const setTestArrayToMainRegExp = (meaning) => {
   return !regExpBlock.regExpHashTag.test(meaning);
 }
 
-function setTestArrayToASingleCharacterString (meaning) {
+const setTestArrayToASingleCharacterString = (meaning) => {
   if (meaning === '#') {
     return true;
   }
 }
 
-function setTestArrayToSameHashTags (meanings) {
+const setTestArrayToSameHashTags = (meanings) => {
   for (let index = 0; index < meanings.length; index++) {
     const convertedMeanings = meanings.slice(index + 1);
     if (convertedMeanings.some( (meaning) => meaning === meanings[index])) {
@@ -32,7 +32,7 @@ function setTestArrayToSameHashTags (meanings) {
   }
 }
 
-function setDeleteEmptyElement (meanings) {
+const setDeleteEmptyElement = (meanings) => {
   const refreshMeaningsTextHashTags = meanings.filter( (meaning) => !(meaning === ''));
   return refreshMeaningsTextHashTags;
 }

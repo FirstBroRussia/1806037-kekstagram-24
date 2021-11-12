@@ -5,7 +5,7 @@ const template = document.querySelector('#picture').content.querySelector('a');
 const picturesFragment = document.createDocumentFragment();
 
 
-function setRenderPhotoMiniatures (data) {
+const setRenderPhotoMiniatures = (data) => {
   data.forEach( (item) => {
     const photoUser = document.createElement('div');
     photoUser.classList.add('photo-from-server');

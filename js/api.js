@@ -5,7 +5,7 @@ import {setShowErrorWhenRequestData} from './functions-to-module-api.js';
 const URL_API_FROM_SERVER = 'https://24.javascript.pages.academy/kekstagram/data';
 const URL_API_TO_SERVER = 'https://24.javascript.pages.academy/kekstagram';
 
-function setDataFromServer (onSuccess, onFail) {
+const setDataFromServer = (onSuccess, onFail) => {
   return fetch(URL_API_FROM_SERVER)
     .then((response) => {
       if (!response.ok) {
@@ -26,7 +26,7 @@ setDataFromServer(setRenderPhotoMiniatures, setShowErrorWhenRequestData);
 
 // =========================================================================================
 
-function setDataToServer (onSuccess, onFail) {
+const setDataToServer = (onSuccess, onFail) => {
   return fetch(URL_API_TO_SERVER,
     {
       method: 'POST',

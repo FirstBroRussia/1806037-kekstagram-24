@@ -1,6 +1,8 @@
 /* eslint-disable no-use-before-define */
 import {isEnterKey, isEscapeKey} from './util.js';
 
+const SET_VALUE_QUANTITY_COMMENTS = 5;
+
 const containerPhotoBlock = document.querySelector('.pictures.container');
 const bigPictureWindow = document.querySelector('.big-picture');
 const socialCommentCount = document.querySelector('.social__comment-count');
@@ -12,10 +14,9 @@ const socialCommentsBlockFragment = document.createDocumentFragment();
 const socialCommentsBlock = document.querySelector('.social__comments');
 const socialCommentBlock = document.querySelector('.social__comment');
 
-const SET_VALUE_QUANTITY_COMMENTS = 5;
-
 let currentVisibleComments = 0;
 let currentBlockData;
+
 // ================================================================
 
 const setDataBlockFromServer = function (data) {
@@ -23,8 +24,8 @@ const setDataBlockFromServer = function (data) {
 };
 
 
-containerPhotoBlock.addEventListener('click', setClickToPhotoMiniatures);
-containerPhotoBlock.addEventListener('keydown', setSelectElement);
+const addHandlerClickToPhotoMiniatures = containerPhotoBlock.addEventListener('click', setClickToPhotoMiniatures);
+const addHandlerEnterKeydownToPhotoMiniatures = containerPhotoBlock.addEventListener('keydown', setSelectElement);
 
 function setClickToPhotoMiniatures (evt) {
   const currentPhoto = evt.target.closest('a[class="picture"]');
@@ -62,10 +63,11 @@ function setOpenBigPicture () {
   bodyContent.classList.add('modal-open');
   bigPictureWindow.classList.remove('hidden');
 
-  document.addEventListener ('keydown', setClosePopupEscapeKeydown);
-  closeButtonFullPhotoWindow.addEventListener('click', setCloseBigPicture);
-  buttonForUploadComments.addEventListener('click', setRenderButtonForUploadComments);
-  containerPhotoBlock.removeEventListener('keydown', setSelectElement);
+  const removeHandlerClickToPhotoMiniatures = containerPhotoBlock.removeEventListener('click', setClickToPhotoMiniatures);
+  const addHandlerEscapeKeydownToClosePopupWithBigPicture = document.addEventListener ('keydown', setClosePopupEscapeKeydown);
+  const addHandlerClickToClosePopupBigPicture = closeButtonFullPhotoWindow.addEventListener('click', setCloseBigPicture);
+  const addHandlerClickToButtonForRenderCommentsBlock = buttonForUploadComments.addEventListener('click', setRenderButtonForUploadComments);
+  const removeHandlerEnterKeydownToPhotoMiniatures = containerPhotoBlock.removeEventListener('keydown', setSelectElement);
 }
 
 function setCloseBigPicture () {
@@ -76,10 +78,11 @@ function setCloseBigPicture () {
   bodyContent.classList.remove('modal-open');
   bigPictureWindow.classList.add('hidden');
 
-  document.removeEventListener ('keydown', setClosePopupEscapeKeydown);
-  closeButtonFullPhotoWindow.removeEventListener('click', setCloseBigPicture);
-  buttonForUploadComments.removeEventListener('click', setRenderButtonForUploadComments);
-  containerPhotoBlock.addEventListener('keydown', setSelectElement);
+  const addHandlerClickToPhotoMiniatures = containerPhotoBlock.addEventListener('click', setClickToPhotoMiniatures);
+  const removeHandlerEscapeKeydownToClosePopupWithBigPicture = document.removeEventListener ('keydown', setClosePopupEscapeKeydown);
+  const removeHandlerClickToClosePopupBigPicture = closeButtonFullPhotoWindow.removeEventListener('click', setCloseBigPicture);
+  const removeHandlerClickToButtonForRenderCommentsBlock = buttonForUploadComments.removeEventListener('click', setRenderButtonForUploadComments);
+  const addHandlerEnterKeydownToPhotoMiniatures = containerPhotoBlock.addEventListener('keydown', setSelectElement);
 }
 
 
@@ -140,7 +143,7 @@ function setRenderBigPicture (currentClickedPhoto) {
   pictureDescription.textContent = currentClickedPhoto.description;
 }
 
-function setRenderCommentsList (currentUrl, dataBlock) {
+const setRenderCommentsList = (currentUrl, dataBlock) => {
   dataBlock.forEach( (meaning) => {
     const currentClickedPhoto = currentUrl.querySelector('.picture__img').src;
     const currentMeaningUrl = meaning.url;
