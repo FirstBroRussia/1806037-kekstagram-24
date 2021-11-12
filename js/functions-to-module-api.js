@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
-import {setCloseEditorWindow, fileUploaderButton} from './form.js';
+import {setCloseUploadWindowHandler, fileUploaderButton} from './form.js';
 import {bodyContent} from './render-full-picture.js';
 import {isEscapeKey} from './util.js';
 
@@ -15,7 +14,7 @@ function setShowErrorWhenRequestData (onError) {
 }
 
 const setSuccessToUploadPhotos = () => {
-  setCloseEditorWindow();
+  setCloseUploadWindowHandler();
   document.querySelector('.img-upload__message').remove();
   setSuccessPopup();
 };
@@ -26,17 +25,17 @@ const setSuccessPopup = () => {
   successTemplate.classList.remove('hidden');
   bodyContent.appendChild(successTemplate);
 
-  const closeSuccessPopupEscapeKeyDownAddHandler = document.addEventListener('keydown', setCloseByKeydownSuccessPopup);
-  const closeSuccessPopupClickAddHandler = document.addEventListener('click', setCloseByClickSuccessPopup);
+  document.addEventListener('keydown', setCloseSuccessPopupEscapeKeyDownHandler);
+  document.addEventListener('click', setCloseSuccessPopupClickHandler);
 
   function setOperationToCloseSuccessPopup () {
     bodyContent.classList.remove('modal-open');
     successTemplate.remove();
-    const closeSuccessPopupEscapeKeyDownRemoveHandler = document.removeEventListener('keydown', setCloseByKeydownSuccessPopup);
-    const closeSuccessPopupClickRemoveHandler = document.removeEventListener('click', setCloseByClickSuccessPopup);
+    document.removeEventListener('keydown', setCloseSuccessPopupEscapeKeyDownHandler);
+    document.removeEventListener('click', setCloseSuccessPopupClickHandler);
   }
 
-  function setCloseByClickSuccessPopup (evt) {
+  function setCloseSuccessPopupClickHandler (evt) {
     if (!evt.target.closest('[class^="success__"]')) {
       setOperationToCloseSuccessPopup();
     } else if (evt.target.closest('[class="success__button"]')) {
@@ -44,7 +43,7 @@ const setSuccessPopup = () => {
     }
   }
 
-  function setCloseByKeydownSuccessPopup (evt) {
+  function setCloseSuccessPopupEscapeKeyDownHandler (evt) {
     if (isEscapeKey(evt)) {
       setOperationToCloseSuccessPopup();
     }
@@ -52,7 +51,7 @@ const setSuccessPopup = () => {
 };
 
 const setErrorToUploadPhotos = () => {
-  setCloseEditorWindow();
+  setCloseUploadWindowHandler();
   document.querySelector('.img-upload__message').remove();
   setErrorPopup();
 };
@@ -62,10 +61,10 @@ const setErrorPopup = () => {
   errorTemplate.classList.remove('hidden');
   bodyContent.appendChild(errorTemplate);
 
-  const closeErrorPopupEscapeKewdownAddHandler = document.addEventListener('keydown', setCloseByKeydownErrorPopup);
-  const closeErrorPopupClickAddHandler = document.addEventListener('click', setCloseByClickErrorPopup);
+  document.addEventListener('keydown', setCloseErrorPopupEscapeKewdownHandler);
+  document.addEventListener('click', setCloseErrorPopupClickHandler);
 
-  function setCloseByClickErrorPopup (evt) {
+  function setCloseErrorPopupClickHandler (evt) {
     if (!evt.target.closest('[class^="error__"]')) {
       setOperationToCloseErrorPopup();
     } else if (evt.target.closest('[class="error__button"]')) {
@@ -73,7 +72,7 @@ const setErrorPopup = () => {
     }
   }
 
-  function setCloseByKeydownErrorPopup (evt) {
+  function setCloseErrorPopupEscapeKewdownHandler (evt) {
     if (isEscapeKey(evt)) {
       setOperationToCloseErrorPopup();
     }
@@ -82,8 +81,8 @@ const setErrorPopup = () => {
   function setOperationToCloseErrorPopup () {
     bodyContent.classList.remove('modal-open');
     errorTemplate.remove();
-    const closeErrorPopupEscapeKewdownRemoveHandler = document.removeEventListener('keydown', setCloseByKeydownErrorPopup);
-    const closeErrorPopupClickRemoveHandler = document.removeEventListener('click', setCloseByClickErrorPopup);
+    document.removeEventListener('keydown', setCloseErrorPopupEscapeKewdownHandler);
+    document.removeEventListener('click', setCloseErrorPopupClickHandler);
   }
 };
 
