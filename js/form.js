@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 
 import {isEscapeKey, VALID_FILE_EXTENSIONS} from './util.js';
@@ -38,7 +36,7 @@ let meaningScale = 100;
 
 // Моменты по контролу загрузки фото
 
-const setChangeUploadFile = (evt) => {
+const setFieldFileUploadChangeHandler = (evt) => {
   const files = evt.target.files;
   if (VALID_FILE_EXTENSIONS.some( (item) => files[0].name.includes(item))) {
     currentImageUpload.src = URL.createObjectURL(files[0]);
@@ -50,7 +48,7 @@ const setChangeUploadFile = (evt) => {
   }
 };
 
-const fieldFileUploadChangeAddHandler = fileUploaderButton.addEventListener('change', setChangeUploadFile);
+fileUploaderButton.addEventListener('change', setFieldFileUploadChangeHandler);
 
 // -------------------------------------------------------------------
 noUiSlider.create(placeSlider, {
@@ -74,13 +72,13 @@ const setUpdateSlider = (currentItemEffect) => {
 
 //-------------------------------------------------------------
 
-const setCloseUploadWindowEscKeydown = (evt) => {
+const setCloseUploadWindowEscapeKeydownHandler = (evt) => {
   if (isEscapeKey(evt)) {
-    setCloseEditorWindow();
+    setCloseUploadWindowHandler();
   }
 };
 
-const setChangeInputFieldToTextComment = () => {
+const setFieldTextCommentInputHandler = () => {
   const textCommentValue = textComment.value;
   lengthTextComment.textContent = `${textCommentValue.length}/${MAX_LENGTH_TEXT_COMMENT_AREA}`;
 };
@@ -91,11 +89,11 @@ const setOpenEditorWindow = () => {
   editorUploadPhoto.classList.remove('hidden');
 
   effectRadioButtons.forEach( (radioButton) => {
-    const setClickEffectsButtons = () => {
+    const setRadioButtonClickHandler = () => {
       const valueCurrentEffect = radioButton.value;
       setEffect(valueCurrentEffect);
 
-      const setChangeSliderPosition = (__, ___, currentMeaningSlider) => {
+      const setSliderPositionChangeHandler = (__, ___, currentMeaningSlider) => {
         const fixedCurrentMeaning = +currentMeaningSlider[0].toFixed(1);
         inputValueDepthEffect.setAttribute('value', `${fixedCurrentMeaning}`);
         previewImageUpload.style.filter = setChangeValuesFilterToImgUploadPreview(valueCurrentEffect, currentMeaningSlider[0]);
@@ -109,23 +107,23 @@ const setOpenEditorWindow = () => {
         setUpdateSlider(setRenderSliderForCurrentEffect(valueCurrentEffect));
         setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueCurrentEffect));
       }
-      const sliderPositionUpdateAddHandler = placeSlider.noUiSlider.on('update', setChangeSliderPosition);
+      placeSlider.noUiSlider.on('update', setSliderPositionChangeHandler);
     };
 
-    const radioButtonClickAddHandler = radioButton.addEventListener('click', setClickEffectsButtons);
+    radioButton.addEventListener('click', setRadioButtonClickHandler);
   });
 
-  const fieldFileUploadChangeRemoveHandler = fileUploaderButton.removeEventListener('change', setChangeUploadFile);
-  const buttonCloseUploadWindowClickAddHandler = buttonCloseUploadWindow.addEventListener('click', setCloseEditorWindow);
-  const closeUploadWindowEscapeKeydownAddHandler = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
-  const fieldTextCommentInputAddHandler  = textComment.addEventListener('input', setChangeInputFieldToTextComment);
-  const fieldHashTagsInputAddHandler = inputTextHashTags.addEventListener('input', setChangeInputFieldHashTags);
-  const smallerScaleButtonClickAddHandler  = smallerScaleButton.addEventListener('click', setClickToSmallerScaleButton);
-  const biggerScaleButtonClickAddHandler  = biggerScaleButton.addEventListener('click', setClickToBiggerScaleButton);
-  const fieldFormSubmitAddHandler = form.addEventListener('submit', setSubmitToFormField);
+  fileUploaderButton.removeEventListener('change', setFieldFileUploadChangeHandler);
+  buttonCloseUploadWindow.addEventListener('click', setCloseUploadWindowHandler);
+  document.addEventListener('keydown', setCloseUploadWindowEscapeKeydownHandler);
+  textComment.addEventListener('input', setFieldTextCommentInputHandler);
+  inputTextHashTags.addEventListener('input', setFieldHashTagsChangeInputHandler);
+  smallerScaleButton.addEventListener('click', setSmallerScaleButtonClickHandler);
+  biggerScaleButton.addEventListener('click', setBiggerScaleButtonClickHandler);
+  form.addEventListener('submit', setFieldFormSubmitHandler);
 };
 
-const setCloseEditorWindow = () => {
+const setCloseUploadWindowHandler = () => {
   fileUploaderButton.disabled = false;
   bodyContent.classList.remove('modal-open');
   editorUploadPhoto.classList.add('hidden');
@@ -142,34 +140,34 @@ const setCloseEditorWindow = () => {
   effectNoneButton.click();
   setEffect('none');
 
-  const fieldFileUploadChangeAddHandler = fileUploaderButton.addEventListener('change', setChangeUploadFile);
-  const buttonCloseUploadWindowClickRemoveHandler = buttonCloseUploadWindow.removeEventListener('click', setCloseEditorWindow);
-  const closeUploadWindowEscapeKeydownRemoveHandler = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
-  const fieldTextCommentInputRemoveHandler  = textComment.removeEventListener ('input', setChangeInputFieldToTextComment);
-  const fieldHashTagsInputRemoveHandler = inputTextHashTags.removeEventListener('input', setChangeInputFieldHashTags);
-  const smallerScaleButtonClickRemoveHandler  = smallerScaleButton.removeEventListener('click', setClickToSmallerScaleButton);
-  const biggerScaleButtonClickRemoveHandler  = biggerScaleButton.removeEventListener('click', setClickToBiggerScaleButton);
-  const fieldFormSubmitRemoveHandler = form.removeEventListener('submit', setSubmitToFormField);
-  const sliderPositionUpdateRemoveHandler  = placeSlider.noUiSlider.off('update');
+  fileUploaderButton.addEventListener('change', setFieldFileUploadChangeHandler);
+  buttonCloseUploadWindow.removeEventListener('click', setCloseUploadWindowHandler);
+  document.removeEventListener('keydown', setCloseUploadWindowEscapeKeydownHandler);
+  textComment.removeEventListener ('input', setFieldTextCommentInputHandler);
+  inputTextHashTags.removeEventListener('input', setFieldHashTagsChangeInputHandler);
+  smallerScaleButton.removeEventListener('click', setSmallerScaleButtonClickHandler);
+  biggerScaleButton.removeEventListener('click', setBiggerScaleButtonClickHandler);
+  form.removeEventListener('submit', setFieldFormSubmitHandler);
+  placeSlider.noUiSlider.off('update');
 };
 
 // Моменты по вводу в поле комментария и хештега при загрузке фото
 
 
-const fieldTextCommentFocusAddHandler = textComment.addEventListener('focus', () => {
-  const closeUploadWindowEscapeKeydownRemoveHandler = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+textComment.addEventListener('focus', () => {
+  document.removeEventListener('keydown', setCloseUploadWindowEscapeKeydownHandler);
 });
 
-const fieldTextCommentFocusOutAddHandler = textComment.addEventListener('focusout', () => {
-  const closeUploadWindowEscapeKeydownAddHandler = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
+textComment.addEventListener('focusout', () => {
+  document.addEventListener('keydown', setCloseUploadWindowEscapeKeydownHandler);
 });
 
-const fieldTextHashTagsFocusAddHandler = inputTextHashTags.addEventListener('focus', () => {
-  const closeUploadWindowEscapeKeydownRemoveHandler = document.removeEventListener('keydown', setCloseUploadWindowEscKeydown);
+inputTextHashTags.addEventListener('focus', () => {
+  document.removeEventListener('keydown', setCloseUploadWindowEscapeKeydownHandler);
 });
 
-const fieldTextHashTagsFocusOutAddHandler = inputTextHashTags.addEventListener('focusout', () => {
-  const closeUploadWindowEscapeKeydownAddHandler = document.addEventListener('keydown', setCloseUploadWindowEscKeydown);
+inputTextHashTags.addEventListener('focusout', () => {
+  document.addEventListener('keydown', setCloseUploadWindowEscapeKeydownHandler);
 });
 
 // Моменты по валидации поля ввода Хештегов
@@ -217,7 +215,7 @@ const setPopupMessageToLoading = () => {
   bodyContent.appendChild(messageToLoading);
 };
 
-const setSubmitToFormField = (evt) => {
+const setFieldFormSubmitHandler = (evt) => {
   evt.preventDefault();
   const returnValue = setUniqueOperationsOverInputValueHashTags();
   inputTextHashTags.setCustomValidity(setValidationCheckForSubmit(returnValue[0]));
@@ -232,7 +230,7 @@ const setSubmitToFormField = (evt) => {
   }
 };
 
-const setChangeInputFieldHashTags = () => {
+const setFieldHashTagsChangeInputHandler = () => {
   inputTextHashTags.classList.remove('border-hash-tags');
   const returnValue = setUniqueOperationsOverInputValueHashTags();
   inputTextHashTags.setCustomValidity(setValidationCheckForInput(returnValue[0], returnValue[1], regExpBlock));
@@ -248,7 +246,7 @@ const setChangeTextValueScale = () => {
   textValueScale.value = `${meaningScale}%`;
 };
 
-const setClickToSmallerScaleButton = () => {
+const setSmallerScaleButtonClickHandler = () => {
   if (meaningScale === MIN_ITEM_SCALE) {
     smallerScaleButton.disabled = true;
   } else if (meaningScale > MIN_ITEM_SCALE) {
@@ -260,7 +258,7 @@ const setClickToSmallerScaleButton = () => {
   document.querySelector('.scale__control--value').setAttribute('value', `${meaningScale}%`);
 };
 
-const setClickToBiggerScaleButton = () => {
+const setBiggerScaleButtonClickHandler = () => {
   if (meaningScale === MAX_ITEM_SCALE) {
     biggerScaleButton.disabled = true;
   } else if (meaningScale < MAX_ITEM_SCALE) {
@@ -347,4 +345,4 @@ const setChangeValuesFilterToImgUploadPreview = (currentEffect, currentItemSlide
   }
 };
 
-export {editorUploadPhoto, setOpenEditorWindow, setCloseEditorWindow, fileUploaderButton};
+export {editorUploadPhoto, setOpenEditorWindow, setCloseUploadWindowHandler, fileUploaderButton};

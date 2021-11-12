@@ -1,6 +1,3 @@
-/* eslint-disable no-shadow */
-
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 import {isEnterKey, isEscapeKey} from './util.js';
 
@@ -27,10 +24,10 @@ const setDataBlockFromServer = function (data) {
 };
 
 
-const photoMiniaturesClickAddHandler = containerPhotoBlock.addEventListener('click', setClickToPhotoMiniatures);
-const photoMiniaturesEnterKeydownAddHandler = containerPhotoBlock.addEventListener('keydown', setSelectElement);
+containerPhotoBlock.addEventListener('click', setPhotoMiniaturesClickHandler);
+containerPhotoBlock.addEventListener('keydown', setPhotoMiniaturesEnterKeydownHandler);
 
-function setClickToPhotoMiniatures (evt) {
+function setPhotoMiniaturesClickHandler (evt) {
   const currentPhoto = evt.target.closest('a[class="picture"]');
   if (!currentPhoto) {
     return;
@@ -41,7 +38,7 @@ function setClickToPhotoMiniatures (evt) {
   setOpenBigPicture();
 }
 
-function setSelectElement (evt) {
+function setPhotoMiniaturesEnterKeydownHandler (evt) {
   if (!isEnterKey(evt)) {
     return;
   }
@@ -56,9 +53,9 @@ function setSelectElement (evt) {
 }
 
 
-function setClosePopupEscapeKeydown(evt) {
+function setClosePopupWithBigPictureEscapeKeydownHandler(evt) {
   if (isEscapeKey(evt)) {
-    setCloseBigPicture();
+    setClosePopupBigPictureHandler();
   }
 }
 
@@ -66,14 +63,14 @@ function setOpenBigPicture () {
   bodyContent.classList.add('modal-open');
   bigPictureWindow.classList.remove('hidden');
 
-  const photoMiniaturesClickRemoveHandler = containerPhotoBlock.removeEventListener('click', setClickToPhotoMiniatures);
-  const closePopupWithBigPictureEscapeKeydownAddHandler = document.addEventListener ('keydown', setClosePopupEscapeKeydown);
-  const closePopupBigPictureClickAddHandler = closeButtonFullPhotoWindow.addEventListener('click', setCloseBigPicture);
-  const buttonForRenderCommentsBlockClickAddHandler = buttonForUploadComments.addEventListener('click', setRenderButtonForUploadComments);
-  const photoMiniaturesEnterKeydownRemoveHandler = containerPhotoBlock.removeEventListener('keydown', setSelectElement);
+  containerPhotoBlock.removeEventListener('click', setPhotoMiniaturesClickHandler);
+  document.addEventListener ('keydown', setClosePopupWithBigPictureEscapeKeydownHandler);
+  closeButtonFullPhotoWindow.addEventListener('click', setClosePopupBigPictureHandler);
+  buttonForUploadComments.addEventListener('click', setButtonForRenderCommentsBlockClickHandler);
+  containerPhotoBlock.removeEventListener('keydown', setPhotoMiniaturesEnterKeydownHandler);
 }
 
-function setCloseBigPicture () {
+function setClosePopupBigPictureHandler () {
   socialCommentsBlock.textContent = '';
   socialCommentCount.textContent = '';
   counterLikes.textContent = '';
@@ -81,11 +78,11 @@ function setCloseBigPicture () {
   bodyContent.classList.remove('modal-open');
   bigPictureWindow.classList.add('hidden');
 
-  const photoMiniaturesClickAddHandler = containerPhotoBlock.addEventListener('click', setClickToPhotoMiniatures);
-  const closePopupWithBigPictureEscapeKeydownRemoveHandler = document.removeEventListener ('keydown', setClosePopupEscapeKeydown);
-  const closePopupBigPictureClickRemoveHandler = closeButtonFullPhotoWindow.removeEventListener('click', setCloseBigPicture);
-  const buttonForRenderCommentsBlockClickRemoveHandler = buttonForUploadComments.removeEventListener('click', setRenderButtonForUploadComments);
-  const photoMiniaturesEnterKeydownAddHandler = containerPhotoBlock.addEventListener('keydown', setSelectElement);
+  containerPhotoBlock.addEventListener('click', setPhotoMiniaturesClickHandler);
+  document.removeEventListener ('keydown', setClosePopupWithBigPictureEscapeKeydownHandler);
+  closeButtonFullPhotoWindow.removeEventListener('click', setClosePopupBigPictureHandler);
+  buttonForUploadComments.removeEventListener('click', setButtonForRenderCommentsBlockClickHandler);
+  containerPhotoBlock.addEventListener('keydown', setPhotoMiniaturesEnterKeydownHandler);
 }
 
 
@@ -117,7 +114,7 @@ function setRenderShowCommentsList () {
   }
 }
 
-function setRenderButtonForUploadComments () {
+function setButtonForRenderCommentsBlockClickHandler () {
   const specificClassFromListComments = document.querySelectorAll('.social__comment.hidden');
   specificClassFromListComments.forEach( (meaning, index) => {
     if (index < SET_VALUE_QUANTITY_COMMENTS) {

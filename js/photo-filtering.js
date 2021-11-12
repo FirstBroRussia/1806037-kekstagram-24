@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {containerPhotoBlock, setRenderPhotoMiniatures} from './render-photo-miniatures.js';
 import {setRandomNumeric} from './util.js';
 
@@ -50,7 +49,7 @@ const setShowWindowsWithFilters = (data) => {
 
   let timeout;
 
-  function setClickToFilterButton (evt) {
+  function setFilterButtonClickHandler (evt) {
 
     function setTargetToFilterDefault () {
       setDeleteClassFilterButtonHighLights();
@@ -91,7 +90,7 @@ const setShowWindowsWithFilters = (data) => {
     }
   }
 
-  const filterButtonClickAddHandler = blockFilterPhoto.addEventListener('click', setClickToFilterButton);
+  blockFilterPhoto.addEventListener('click', setFilterButtonClickHandler);
 };
 
 
