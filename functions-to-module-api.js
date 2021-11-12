@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 import {setCloseEditorWindow, fileUploaderButton} from './form.js';
 import {bodyContent} from './render-full-picture.js';
@@ -18,7 +17,7 @@ const setSuccessToUploadPhotos = () => {
   setCloseEditorWindow();
   document.querySelector('.img-upload__message').remove();
   setSuccessPopup();
-};
+}
 
 
 const setSuccessPopup = () => {
@@ -49,13 +48,13 @@ const setSuccessPopup = () => {
       setOperationToCloseSuccessPopup();
     }
   }
-};
+}
 
 const setErrorToUploadPhotos = () => {
   setCloseEditorWindow();
   document.querySelector('.img-upload__message').remove();
   setErrorPopup();
-};
+}
 
 const setErrorPopup = () => {
   bodyContent.classList.add('modal-open');
@@ -85,7 +84,7 @@ const setErrorPopup = () => {
     const closeErrorPopupEscapeKewdownRemoveHandler = document.removeEventListener('keydown', setCloseByKeydownErrorPopup);
     const closeErrorPopupClickRemoveHandler = document.removeEventListener('click', setCloseByClickErrorPopup);
   }
-};
+}
 
 
 export {setShowErrorWhenRequestData, setSuccessToUploadPhotos, setErrorToUploadPhotos};

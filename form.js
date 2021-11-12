@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 
 import {isEscapeKey, VALID_FILE_EXTENSIONS} from './util.js';
@@ -48,7 +46,7 @@ const setChangeUploadFile = (evt) => {
     fileUploaderButton.reportValidity();
     fileUploaderButton.value = '';
   }
-};
+}
 
 const fieldFileUploadChangeAddHandler = fileUploaderButton.addEventListener('change', setChangeUploadFile);
 
@@ -66,11 +64,11 @@ noUiSlider.create(placeSlider, {
 const setEffect = (item) => {
   previewImageUpload.removeAttribute('class');
   previewImageUpload.setAttribute('class', `img-upload__preview effects__preview--${item}`);
-};
+}
 
 const setUpdateSlider = (currentItemEffect) => {
   placeSlider.noUiSlider.updateOptions(currentItemEffect);
-};
+}
 
 //-------------------------------------------------------------
 
@@ -78,12 +76,12 @@ const setCloseUploadWindowEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     setCloseEditorWindow();
   }
-};
+}
 
 const setChangeInputFieldToTextComment = () => {
   const textCommentValue = textComment.value;
   lengthTextComment.textContent = `${textCommentValue.length}/${MAX_LENGTH_TEXT_COMMENT_AREA}`;
-};
+}
 
 const setOpenEditorWindow = () => {
   fileUploaderButton.disabled = true;
@@ -91,7 +89,7 @@ const setOpenEditorWindow = () => {
   editorUploadPhoto.classList.remove('hidden');
 
   effectRadioButtons.forEach( (radioButton) => {
-    const setClickEffectsButtons = () => {
+    radioButton.addEventListener('click', () => {
       const valueCurrentEffect = radioButton.value;
       setEffect(valueCurrentEffect);
 
@@ -99,7 +97,7 @@ const setOpenEditorWindow = () => {
         const fixedCurrentMeaning = +currentMeaningSlider[0].toFixed(1);
         inputValueDepthEffect.setAttribute('value', `${fixedCurrentMeaning}`);
         previewImageUpload.style.filter = setChangeValuesFilterToImgUploadPreview(valueCurrentEffect, currentMeaningSlider[0]);
-      };
+      }
       if (valueCurrentEffect === 'none') {
         placeSliderTag.classList.add('hidden');
         inputValueDepthEffect.setAttribute('step', '');
@@ -110,9 +108,7 @@ const setOpenEditorWindow = () => {
         setChangeValueDepthEffect(setRenderSliderForCurrentEffect(valueCurrentEffect));
       }
       const sliderPositionUpdateAddHandler = placeSlider.noUiSlider.on('update', setChangeSliderPosition);
-    };
-
-    const radioButtonClickAddHandler = radioButton.addEventListener('click', setClickEffectsButtons);
+    });
   });
 
   const fieldFileUploadChangeRemoveHandler = fileUploaderButton.removeEventListener('change', setChangeUploadFile);
@@ -123,7 +119,7 @@ const setOpenEditorWindow = () => {
   const smallerScaleButtonClickAddHandler  = smallerScaleButton.addEventListener('click', setClickToSmallerScaleButton);
   const biggerScaleButtonClickAddHandler  = biggerScaleButton.addEventListener('click', setClickToBiggerScaleButton);
   const fieldFormSubmitAddHandler = form.addEventListener('submit', setSubmitToFormField);
-};
+}
 
 const setCloseEditorWindow = () => {
   fileUploaderButton.disabled = false;
@@ -151,7 +147,7 @@ const setCloseEditorWindow = () => {
   const biggerScaleButtonClickRemoveHandler  = biggerScaleButton.removeEventListener('click', setClickToBiggerScaleButton);
   const fieldFormSubmitRemoveHandler = form.removeEventListener('submit', setSubmitToFormField);
   const sliderPositionUpdateRemoveHandler  = placeSlider.noUiSlider.off('update');
-};
+}
 
 // Моменты по вводу в поле комментария и хештега при загрузке фото
 
@@ -189,7 +185,7 @@ const setValidationCheckForInput = (meaningsTextHashTags, valueTextHashTags, mea
   }
 
   return '';
-};
+}
 
 const setValidationCheckForSubmit = (meaningsTextHashTags) => {
   if (meaningsTextHashTags.some(setTestArrayToASingleCharacterString)) {
@@ -203,19 +199,19 @@ const setValidationCheckForSubmit = (meaningsTextHashTags) => {
   }
 
   return '';
-};
+}
 
 const setUniqueOperationsOverInputValueHashTags = () => {
   const valueTextHashTags = inputTextHashTags.value.toLowerCase();
   const lineTextHashTags = valueTextHashTags.split(' ');
   const refreshMeaningsTextHashTags = setDeleteEmptyElement(lineTextHashTags);
   return [refreshMeaningsTextHashTags, valueTextHashTags];
-};
+}
 
 const setPopupMessageToLoading = () => {
   editorUploadPhoto.classList.add('hidden');
   bodyContent.appendChild(messageToLoading);
-};
+}
 
 const setSubmitToFormField = (evt) => {
   evt.preventDefault();
@@ -230,23 +226,23 @@ const setSubmitToFormField = (evt) => {
     setPopupMessageToLoading();
     setDataToServer(setSuccessToUploadPhotos, setErrorToUploadPhotos);
   }
-};
+}
 
 const setChangeInputFieldHashTags = () => {
   inputTextHashTags.classList.remove('border-hash-tags');
   const returnValue = setUniqueOperationsOverInputValueHashTags();
   inputTextHashTags.setCustomValidity(setValidationCheckForInput(returnValue[0], returnValue[1], regExpBlock));
   inputTextHashTags.reportValidity();
-};
+}
 
 
 const setStyleTransform = () => {
   previewImageUpload.style.transform = `scale(${meaningScale/100})`;
-};
+}
 
 const setChangeTextValueScale = () => {
   textValueScale.value = `${meaningScale}%`;
-};
+}
 
 const setClickToSmallerScaleButton = () => {
   if (meaningScale === MIN_ITEM_SCALE) {
@@ -258,7 +254,7 @@ const setClickToSmallerScaleButton = () => {
   }
   smallerScaleButton.disabled = false;
   document.querySelector('.scale__control--value').setAttribute('value', `${meaningScale}%`);
-};
+}
 
 const setClickToBiggerScaleButton = () => {
   if (meaningScale === MAX_ITEM_SCALE) {
@@ -270,12 +266,12 @@ const setClickToBiggerScaleButton = () => {
   }
   biggerScaleButton.disabled = false;
   document.querySelector('.scale__control--value').setAttribute('value', `${meaningScale}%`);
-};
+}
 
 
 const setChangeValueDepthEffect = (currentEffect) => {
   inputValueDepthEffect.setAttribute('step', `${currentEffect.step}`);
-};
+}
 
 const setRenderSliderForCurrentEffect = (currentEffect) => {
   switch (currentEffect) {
@@ -327,7 +323,7 @@ const setRenderSliderForCurrentEffect = (currentEffect) => {
     case 'none':
       break;
   }
-};
+}
 
 
 const setChangeValuesFilterToImgUploadPreview = (currentEffect, currentItemSlider) => {
@@ -345,6 +341,6 @@ const setChangeValuesFilterToImgUploadPreview = (currentEffect, currentItemSlide
     case 'none':
       return 'none';
   }
-};
+}
 
 export {editorUploadPhoto, setOpenEditorWindow, setCloseEditorWindow, fileUploaderButton};

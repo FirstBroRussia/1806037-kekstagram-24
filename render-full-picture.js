@@ -1,6 +1,3 @@
-/* eslint-disable no-shadow */
-
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 import {isEnterKey, isEscapeKey} from './util.js';
 
@@ -163,7 +160,7 @@ const setRenderCommentsList = (currentUrl, dataBlock) => {
   });
   socialCommentsBlock.textContent = '';
   socialCommentsBlock.appendChild(socialCommentsBlockFragment);
-};
+}
 
 
 export {bodyContent, setDataBlockFromServer};
