@@ -19,7 +19,7 @@ const setRenderPhotoMiniatures = (data) => {
   containerPhotoBlock.appendChild(picturesFragment);
 
   setDataBlockFromServer(data);
-};
+}
 
 
 export {containerPhotoBlock, setRenderPhotoMiniatures};

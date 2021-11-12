@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {containerPhotoBlock, setRenderPhotoMiniatures} from './render-photo-miniatures.js';
 import {setRandomNumeric} from './util.js';
 
@@ -12,14 +11,14 @@ const setDeleteClassFilterButtonHighLights = () => {
   for (const buttonFilter of buttonsFilter) {
     buttonFilter.classList.remove('img-filters__button--active');
   }
-};
+}
 
 const setClearPicturesList = () => {
   const picturesBlock = containerPhotoBlock.querySelectorAll('.photo-from-server');
   for (const picture of picturesBlock) {
     picture.remove();
   }
-};
+}
 
 const setRenderPhotoMiniaturesByRandomFilter = (data) => {
   const uniqueValues = [];
@@ -32,7 +31,7 @@ const setRenderPhotoMiniaturesByRandomFilter = (data) => {
   const convertedDataByRandomFilter = data.map( (meaning, index, meanings) => meanings[uniqueValues[index]])
     .slice(0,QUANTITY_MINIATURES);
   setRenderPhotoMiniatures(convertedDataByRandomFilter);
-};
+}
 
 const setRenderPhotoMiniaturesByDiscussedFilter = (data) => {
   const convertedDataByDiscussionFilter = data.map( (meaning) =>
@@ -43,7 +42,7 @@ const setRenderPhotoMiniaturesByDiscussedFilter = (data) => {
   )
     .sort( (meaningA, meaningB) => meaningB.commentsListLength - meaningA.commentsListLength);
   setRenderPhotoMiniatures(convertedDataByDiscussionFilter);
-};
+}
 
 const setShowWindowsWithFilters = (data) => {
   blockFilterPhoto.classList.remove('img-filters--inactive');
@@ -92,7 +91,7 @@ const setShowWindowsWithFilters = (data) => {
   }
 
   const filterButtonClickAddHandler = blockFilterPhoto.addEventListener('click', setClickToFilterButton);
-};
+}
 
 
 export {setShowWindowsWithFilters};

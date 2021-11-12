@@ -11,15 +11,17 @@ const setTestArrayToFirstHash = (meaning) => {
   if (!regExpBlock.regExpFirstSymbol.test(meaning) && meaning.length > 0) {
     return true;
   }
-};
+}
 
-const setTestArrayToMainRegExp = (meaning) => !regExpBlock.regExpHashTag.test(meaning);
+const setTestArrayToMainRegExp = (meaning) => {
+  return !regExpBlock.regExpHashTag.test(meaning);
+}
 
 const setTestArrayToASingleCharacterString = (meaning) => {
   if (meaning === '#') {
     return true;
   }
-};
+}
 
 const setTestArrayToSameHashTags = (meanings) => {
   for (let index = 0; index < meanings.length; index++) {
@@ -28,12 +30,12 @@ const setTestArrayToSameHashTags = (meanings) => {
       return true;
     }
   }
-};
+}
 
 const setDeleteEmptyElement = (meanings) => {
   const refreshMeaningsTextHashTags = meanings.filter( (meaning) => !(meaning === ''));
   return refreshMeaningsTextHashTags;
-};
+}
 
 
 export {regExpBlock, setTestArrayToFirstHash, setTestArrayToMainRegExp, setTestArrayToASingleCharacterString, setTestArrayToSameHashTags, setDeleteEmptyElement};
