@@ -53,13 +53,13 @@ function setPhotoMiniaturesEnterKeydownHandler (evt) {
 }
 
 
-function setClosePopupWithBigPictureEscapeKeydownHandler(evt) {
+const setClosePopupWithBigPictureEscapeKeydownHandler = (evt) => {
   if (isEscapeKey(evt)) {
     setClosePopupBigPictureHandler();
   }
-}
+};
 
-function setOpenBigPicture () {
+const setOpenBigPicture = () => {
   bodyContent.classList.add('modal-open');
   bigPictureWindow.classList.remove('hidden');
 
@@ -68,9 +68,9 @@ function setOpenBigPicture () {
   closeButtonFullPhotoWindow.addEventListener('click', setClosePopupBigPictureHandler);
   buttonForUploadComments.addEventListener('click', setButtonForRenderCommentsBlockClickHandler);
   containerPhotoBlock.removeEventListener('keydown', setPhotoMiniaturesEnterKeydownHandler);
-}
+};
 
-function setClosePopupBigPictureHandler () {
+const setClosePopupBigPictureHandler = () => {
   socialCommentsBlock.textContent = '';
   socialCommentCount.textContent = '';
   counterLikes.textContent = '';
@@ -83,21 +83,21 @@ function setClosePopupBigPictureHandler () {
   closeButtonFullPhotoWindow.removeEventListener('click', setClosePopupBigPictureHandler);
   buttonForUploadComments.removeEventListener('click', setButtonForRenderCommentsBlockClickHandler);
   containerPhotoBlock.addEventListener('keydown', setPhotoMiniaturesEnterKeydownHandler);
-}
+};
 
 
 // =========================================================================
 
-function setQuantitySocialCommentsForClickedPhoto () {
+const setQuantitySocialCommentsForClickedPhoto = () => {
   const allSocialComments = document.querySelectorAll('.social__comment');
   return allSocialComments;
-}
+};
 
-function setSocialCommentCountTextContent (currentsVisibleComments, allSocialComments) {
+const setSocialCommentCountTextContent = (currentsVisibleComments, allSocialComments) => {
   socialCommentCount.textContent = `${currentsVisibleComments} из ${allSocialComments.length} комментариев`;
-}
+};
 
-function setRenderShowCommentsList () {
+const setRenderShowCommentsList = () => {
   if (setQuantitySocialCommentsForClickedPhoto().length > SET_VALUE_QUANTITY_COMMENTS) {
     buttonForUploadComments.classList.remove('hidden');
     currentVisibleComments = SET_VALUE_QUANTITY_COMMENTS;
@@ -112,9 +112,9 @@ function setRenderShowCommentsList () {
     currentVisibleComments = setQuantitySocialCommentsForClickedPhoto().length;
     setSocialCommentCountTextContent(currentVisibleComments, setQuantitySocialCommentsForClickedPhoto());
   }
-}
+};
 
-function setButtonForRenderCommentsBlockClickHandler () {
+const setButtonForRenderCommentsBlockClickHandler = () => {
   const specificClassFromListComments = document.querySelectorAll('.social__comment.hidden');
   specificClassFromListComments.forEach( (meaning, index) => {
     if (index < SET_VALUE_QUANTITY_COMMENTS) {
@@ -130,18 +130,18 @@ function setButtonForRenderCommentsBlockClickHandler () {
     currentVisibleComments += SET_VALUE_QUANTITY_COMMENTS;
     setSocialCommentCountTextContent(currentVisibleComments, setQuantitySocialCommentsForClickedPhoto());
   }
-}
+};
 
 // +=====================================================================================================
 
-function setRenderBigPicture (currentClickedPhoto) {
+const setRenderBigPicture = (currentClickedPhoto) => {
   const bigPicture = document.querySelector('.big-picture__img');
   const pictureDescription = document.querySelector('.social__caption');
   bigPicture.querySelector('img').src = currentClickedPhoto.querySelector('.picture__img').src;
   bigPicture.querySelector('img').alt = currentClickedPhoto.querySelector('.picture__img').alt;
   counterLikes.textContent = currentClickedPhoto.querySelector('.picture__likes').textContent;
   pictureDescription.textContent = currentClickedPhoto.description;
-}
+};
 
 const setRenderCommentsList = (currentUrl, dataBlock) => {
   dataBlock.forEach( (meaning) => {
